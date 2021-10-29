@@ -1,2 +1,2 @@
 # MERNChat
-# MERNchat
+# Real time chat application based on MERN stack
