@@ -1,0 +1,19 @@
+*{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+.App{
+  display:grid;
+  place-items: center;
+  height:100vh;
+}
+.appbody{
+  background-color:antiquewhite;
+  box-shadow: 0px 10px 30px 0px black ;
+  width:90vw;
+  height:98vh;
+  margin-top:20px;
+  display:flex;
+  flex:1;
+}
