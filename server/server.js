@@ -9,6 +9,7 @@ const cors = require('cors');
 const bp = require('body-parser');
 const mongoose = require('mongoose');
 require('dotenv').config()
+
 //database
 const url = `mongodb+srv://${process.env.ID}:${process.env.PASS}@cluster0.tnd4e.mongodb.net/${process.env.DB}?retryWrites=true&w=majority`;
 
@@ -41,12 +42,13 @@ app.get('/messages/sync', (req, res) => {
         }
     })
 })
-app.post('/', (req, res) => {
-    Message.create(req.body, (err, data) => {
-        if (err) {
-            console.log(err.message);
-        } else {
-            res.send(data);
+
+app.get('/messages/delete', (req, res) => {
+    Message.deleteMany({}, (err, data) => {
+        if(err) console.log(err.message)
+        else{
+            console.log(data)
+            res.send("deleted");
         }
     })
 })
@@ -54,7 +56,7 @@ app.post('/', (req, res) => {
 //socket io connection
 io.on('connection', (socket) => {
     var roomid,username;
-    console.log("connection established");
+    console.log("connection established",socket.id);
     // var room,user;
     socket.on('disconnect', () => {
         console.log("connection closed");

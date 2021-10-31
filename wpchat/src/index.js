@@ -11,6 +11,7 @@ import Join from './components/Join';
 window.ethereum.autoRefreshOnNetworkChange = false;
 
 ReactDOM.render(
+ 
   <Router>
     <Switch>
       <Route exact path="/" component={Join} />

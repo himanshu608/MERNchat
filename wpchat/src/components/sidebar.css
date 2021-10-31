@@ -46,3 +46,6 @@
     margin-right: 20px;
     background-color: aliceblue;
 }
+.sidebar-contacts{
+    overflow:auto;
+}

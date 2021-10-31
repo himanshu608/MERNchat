@@ -6,13 +6,13 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DonutLargeIcon from '@mui/icons-material/DonutLarge';
 import SearchIcon from '@mui/icons-material/Search';
 import Contacts from './Contacts';
-function Sidebar() {
+function Sidebar({name}) {
     return (
         <div className="sidebar">
             <div className="sidebar-heading">
                 <div className="sidebar-header-left">
                 <Avatar src={"https://cdn.icon-icons.com/icons2/2643/PNG/512/male_boy_person_people_avatar_icon_159358.png"} sx={{ width: 50, height: 50 }} />
-                <h1>Himanshu</h1>
+                <h1>{name}</h1>
                 </div>
                 <div className="sidebar-header-right">
                     <IconButton >
@@ -34,7 +34,15 @@ function Sidebar() {
                 <input type="text" placeholder="search for messages"></input>
             </div>
 
-            <div className="sidebar-contacts">
+            <div className="sidebar-contacts" >
+                <Contacts />
+                <Contacts />
+                <Contacts />
+                <Contacts />
+                <Contacts />
+                <Contacts />
+                <Contacts />
+                <Contacts />
                 <Contacts />
                 <Contacts />
                 <Contacts />
