@@ -7,13 +7,22 @@
   display:grid;
   place-items: center;
   height:100vh;
+  background-color:#e3e3f3;
+
+  
 }
 .appbody{
-  background-color:antiquewhite;
-  box-shadow: 0px 10px 30px 0px black ;
-  width:90vw;
-  height:98vh;
-  margin-top:20px;
+  width:95vw;
+  height:96vh;
+  margin-top:10px;
   display:flex;
   flex:1;
+  border-radius: 38px;
+  background: linear-gradient(315deg, #ffffff, #e6e6e6);
+  box-shadow:  -7px -7px 42px #666666,
+             7px 7px 42px #ffffff;
+}
+
+@media screen and (min-width: 768px) {
+  
 }

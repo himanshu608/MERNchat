@@ -6,7 +6,11 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DonutLargeIcon from '@mui/icons-material/DonutLarge';
 import SearchIcon from '@mui/icons-material/Search';
 import Contacts from './Contacts';
+import LogoutIcon from '@mui/icons-material/Logout';
 function Sidebar({name}) {
+    function sideHide(){
+        document.querySelector('.sidebar-header-right-responsive').classList.toggle('hide');
+    }
     return (
         <div className="sidebar">
             <div className="sidebar-heading">
@@ -15,15 +19,21 @@ function Sidebar({name}) {
                 <h1>{name}</h1>
                 </div>
                 <div className="sidebar-header-right">
-                    <IconButton >
-                        <ChatIcon/>
-                    </IconButton>
-                    <IconButton >
-                        <DonutLargeIcon/>
-                    </IconButton>
-                    <IconButton >
+                    
+                    <IconButton onClick={sideHide}>
                         <MoreVertIcon/>
                     </IconButton>
+                    <div className="sidebar-header-right-responsive">
+                        <IconButton >
+                            <ChatIcon/>
+                        </IconButton>
+                        <IconButton >
+                            <DonutLargeIcon/>
+                        </IconButton>
+                        <IconButton >
+                            <LogoutIcon />
+                        </IconButton>
+                    </div>
                 </div>
             </div>
 

@@ -9,6 +9,21 @@ const cors = require('cors');
 const bp = require('body-parser');
 const mongoose = require('mongoose');
 require('dotenv').config()
+const path = require('path');
+const fs = require('fs');
+
+//multer
+
+var multer = require('multer')
+
+var storage = multer.diskStorage({
+    destination: './uploads/',
+    filename: function (request, file, callback) {
+        callback(null, 'images.png')
+    }
+});
+
+var upload = multer({ storage: storage });
 
 //database
 const url = `mongodb+srv://${process.env.ID}:${process.env.PASS}@cluster0.tnd4e.mongodb.net/${process.env.DB}?retryWrites=true&w=majority`;
@@ -19,11 +34,12 @@ mongoose.connect(url).then(() => {
     console.log(err.message);
 })
 
-const Message = require('./mongo');
+const {Message,groupPic} = require('./mongo');
 //---------------------------------------------------------------- //
 
 
 //middleware
+
 app.use(cors());
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
@@ -43,6 +59,17 @@ app.get('/messages/sync', (req, res) => {
     })
 })
 
+app.get("/groupPics",(req, res) => {
+    groupPic.find({}, (err, data) => {
+        if(err) {console.log(err.message);
+        res.status(500).send("an error occurred")}
+        else{
+            // console.log((data[0].img));
+            res.status(200).send(data)
+        }
+    })
+})
+
 app.get('/messages/delete', (req, res) => {
     Message.deleteMany({}, (err, data) => {
         if(err) console.log(err.message)
@@ -53,6 +80,30 @@ app.get('/messages/delete', (req, res) => {
     })
 })
 
+app.post('/groupPicUpload/:id', upload.single('image'), function (req, res) {
+    var newImg = {
+        roomId:req.body.room,
+        img : {
+            data: fs.readFileSync(path.join(__dirname + '/uploads/images.png')),
+            contentType: 'image/png'
+        }
+    }
+    groupPic.deleteMany({roomId:req.params.id}, (err, data)=>{
+        if (err) console.log(err.message);
+        else{
+            groupPic.create(newImg,(err, data)=>{
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log("image saved");
+                }
+            })
+        }
+    })
+    
+    res.status(204).end()
+});
 //socket io connection
 io.on('connection', (socket) => {
     var roomid,username;

@@ -1,5 +1,6 @@
 // https://overreacted.io/
 import './App.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import Chat from './components/Chat';
 import Sidebar from './components/Sidebar';
 // import Join from './components/Join';
@@ -11,7 +12,7 @@ function App({ location }) {
   const a = queryString.parse(location.search);
   
   return (
-    <div className="App">
+    <div className="App ">
       <div className="appbody">
         <Sidebar name={a.name} />
         <Chat user={a.name} room={a.room} socket={socket} />

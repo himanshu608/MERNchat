@@ -1,17 +1,20 @@
 .sidebar{
     display: flex;
-    flex:0.35;
+    flex:0.45;
     background-color:aliceblue;
     flex-direction: column;
+    border-radius: 38px 0 0 0;
 }
 
 .sidebar-heading{
+    position: relative;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     padding:10px;
     background-color:rgb(155, 248, 252);
     align-items:center;
+    border-radius: 38px 0 0 0;
 }
 .sidebar-header-right{
     margin-left:10px;
@@ -21,7 +24,6 @@
     display: flex;
     flex-direction: row;
     align-items:center;
-    flex:1;
 }
 .sidebar-header-left > h1{
     margin-left: 10px;
@@ -48,4 +50,22 @@
 }
 .sidebar-contacts{
     overflow:auto;
+}
+
+.sidebar-header-right-responsive{
+    display: none;
+    position: absolute;
+    flex-direction:column;
+    background-color:aquamarine;
+    padding: 10px;
+    float: right;
+    right:40px;
+    border-radius: 10px 0px 10px 10px;
+    border-bottom: 1px dotted black;
+    box-shadow:  0px -5px 41px #a6a6a6,
+                 10px 10px 41px #ffffff;
+}
+
+.sidebar-header-right-responsive.hide{
+    display:flex;
 }

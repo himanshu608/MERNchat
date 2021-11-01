@@ -9,12 +9,12 @@ import MicIcon from '@mui/icons-material/Mic';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CloseIcon from '@mui/icons-material/Close';
 function Chat({ user, room, socket }) {
-    const [ul,setUl]= useState("");
     const [roomName, setRoomName] = useState("");
     const [newMsg, setNewMsg] = useState("");
     const [messages, setMessages] = useState([]);
     const inp = useRef();
     const [chatwidth, setChatwidth] = useState();
+    const [grpSrc , setGrpSrc] = useState();
     useEffect(() => {
         socket.emit("new-join", { user, room });
         setChatwidth(document.querySelector('.chat-message-container').offsetWidth)
@@ -90,8 +90,66 @@ function Chat({ user, room, socket }) {
             document.querySelector('.float-button').classList.remove('hidebtn');
         }, 1000)
     }
+    function openChatOption() {
+        document.querySelector('.chat-header-right-options').classList.toggle('hide');
+    }
+    function groupPicHide() {
+        document.querySelector('.groupPic-div').classList.toggle('hide');
+    }
+    function changeGroupPic(e) {
+        e.preventDefault();
+        var input = document.querySelector('#changeGrp')
 
+        var data = new FormData()
+        data.append('image', input.files[0])
+        data.append('user', user)
+        data.append('room', room)
+
+        fetch(`http://localhost:5000/groupPicUpload/${room}`, {
+        method: 'POST',
+        headers: {
+            enctype:"multipart/form-data"
+        },
+        body: data
+        })
+        console.log(data);
+        groupPicHide();
+        
+    }
+
+    useEffect(() => {
+        fetch('http://localhost:5000/groupPics').then(res => {
+             return res.text();
+         }).then(data => {
+             data = JSON.parse(data)
+             data.map(i=>{
+                 if(i.roomId === room){
+                    const ig =`data:${i.img.contentType};base64,${Buffer.from(i.img.data).toString('base64')}`
+                    setGrpSrc(ig);
+                 }
+             })
+             
+         })
+         .catch(err => {console.log(err);});
+    },[])
     return (
+        <>
+        <div className="groupPic-div"> 
+            <IconButton  className ="groupPic-div-crossicon" onClick={groupPicHide}  >
+                <CloseIcon />
+            </IconButton>
+            <div className="group-pic-image">
+                {/* <img src="https://images.pexels.com/photos/9770777/pexels-photo-9770777.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" ></img> */}
+                <img src={grpSrc}></img>
+            </div>
+
+            <div className="change-grouPic">
+
+               <input type="file" id="changeGrp"></input>
+                <button onClick={changeGroupPic} type="button" className="">Change<span></span></button>
+
+            </div>
+        </div>
         <div className="chat">
             <div className="cameradiv">
                 <IconButton onClick={tog} sx={{ backgroundColor: "black", color: "white", margin: "10px" }}>
@@ -100,7 +158,9 @@ function Chat({ user, room, socket }) {
             </div>
             <div className="chat-header">
                 <div className="chat-header-left">
-                    <Avatar sx={{ width: 50, height: 50 }} />
+                    <IconButton  onClick={groupPicHide}> 
+                    <Avatar src={grpSrc} sx={{ width: 50, height: 50 }} />
+                    </IconButton>
                     <div className="chat-header-middle">
                         <h2>{roomName}</h2>
                         <h6>last Seen</h6>
@@ -113,10 +173,20 @@ function Chat({ user, room, socket }) {
                     <IconButton onClick={openFileOption}>
                         <AttachFileIcon />
                     </IconButton>
-                    <IconButton>
+                    <IconButton onClick={openChatOption}>
                         <MoreVertIcon  />
                     </IconButton>
+                    <div className="chat-header-right-options">
+                        <h2>hello</h2>
+                        <h2>hello</h2>
+                        <h2>hello</h2>
+                    </div>
                     <input type="file" multiple={true} id="file1" style={{ display: "none" }}></input>
+                </div>
+                <div className="chat-header-right-responsive">
+                    <IconButton onClick={openChatOption}>
+                        <MoreVertIcon  />
+                    </IconButton>
                 </div>
             </div>
 
@@ -152,6 +222,7 @@ function Chat({ user, room, socket }) {
                 </IconButton>
             </div>
         </div>
+        </>
     )
 }
 

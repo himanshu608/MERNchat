@@ -8,4 +8,12 @@ const Message = mongoose.Schema({
     time:String,
 });
 
-module.exports = mongoose.model('messagedata', Message);
+const groupPic = mongoose.Schema({
+    roomId:String,
+    img : {
+        data: Buffer,
+        contentType: String
+    }
+})
+
+module.exports = {Message: mongoose.model('messagedata', Message) , groupPic : mongoose.model('groupsImg',groupPic)};
