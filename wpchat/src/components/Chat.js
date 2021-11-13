@@ -148,6 +148,17 @@ function Chat({ user, room }) {
         
     }
 
+    function changeMe(input){
+        if (FileReader)
+	    {
+		var reader = new FileReader();
+		reader.readAsDataURL(input.target.files[0]);
+		reader.onload = function (e) {
+			setGrpSrc(e.target.result) ;
+		}
+	    }
+    }
+
     useEffect(() => {
         fetch('http://localhost:5000/groupPics').then(res => {
              return res.text();
@@ -170,13 +181,12 @@ function Chat({ user, room }) {
                 <CloseIcon />
             </IconButton>
             <div className="group-pic-image">
-                {/* <img src="https://images.pexels.com/photos/9770777/pexels-photo-9770777.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" ></img> */}
-                <img src={grpSrc}></img>
+                <img src={grpSrc} id="gpicImg"></img>
             </div>
 
             <div className="change-grouPic">
 
-               <input type="file" id="changeGrp"></input>
+               <input type="file" id="changeGrp" onChange={changeMe}></input>
                 <button onClick={changeGroupPic} type="button" className="">Change<span></span></button>
 
             </div>

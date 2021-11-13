@@ -182,7 +182,7 @@
 
 .groupPic-div{
     position: absolute;
-    background-color: #142F43;
+    /* background-color: #142F43; */
     width: 0;
     height: 0;
     z-index: 20;
@@ -191,6 +191,7 @@
     flex-direction:column;
     transition: all .5s;
     left:50vw;
+    backdrop-filter: blur(10px);
 }
 .groupPic-div.hide{
     display: flex;
@@ -207,9 +208,9 @@
 }
 
 .group-pic-image{
-    width: 70%;
+    width: 60%;
     height: 80%;
-    background-color:red;
+    background-color:#FF5151;
     align-self: center;
 }
 .group-pic-image img{
