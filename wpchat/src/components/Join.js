@@ -24,6 +24,7 @@ function Join() {
         }
         else return null;
     }
+
     return (
         <div className="join">
             <div className="join-body">

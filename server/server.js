@@ -107,7 +107,6 @@ app.post('/groupPicUpload/:id', upload.single('image'), function (req, res) {
 //socket io connection
 io.on('connection', (socket) => {
     var roomid,username;
-    console.log("connection established",socket.id);
     // var room,user;
     socket.on('disconnect', () => {
         console.log("connection closed");
@@ -116,6 +115,7 @@ io.on('connection', (socket) => {
         socket.join(room);
         roomid=room;
         username=user;
+        console.log("new joined");
     })
     socket.on("new-msg", (msg) => {
         socket.to(roomid).emit('new-msg', msg);

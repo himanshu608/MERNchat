@@ -1,5 +1,6 @@
 import React from 'react'
 import './sidebar.css';
+import {Link} from 'react-router-dom';
 import {Avatar, IconButton} from '@mui/material';
 import ChatIcon from '@mui/icons-material/Chat';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -7,7 +8,7 @@ import DonutLargeIcon from '@mui/icons-material/DonutLarge';
 import SearchIcon from '@mui/icons-material/Search';
 import Contacts from './Contacts';
 import LogoutIcon from '@mui/icons-material/Logout';
-function Sidebar({name}) {
+function Sidebar({name , room}) {
     function sideHide(){
         document.querySelector('.sidebar-header-right-responsive').classList.toggle('hide');
     }
@@ -20,18 +21,18 @@ function Sidebar({name}) {
                 </div>
                 <div className="sidebar-header-right">
                     
-                    <IconButton onClick={sideHide}>
+                    <IconButton sx={{color:"white"}} onClick={sideHide}>
                         <MoreVertIcon/>
                     </IconButton>
                     <div className="sidebar-header-right-responsive">
-                        <IconButton >
+                        <IconButton sx={{color:"white"}} >
                             <ChatIcon/>
                         </IconButton>
-                        <IconButton >
+                        <IconButton sx={{color:"white"}} >
                             <DonutLargeIcon/>
                         </IconButton>
-                        <IconButton >
-                            <LogoutIcon />
+                        <IconButton sx={{color:"white"}} >
+                            <a href="/" style={{color:"white"}}><LogoutIcon /></a>
                         </IconButton>
                     </div>
                 </div>
@@ -43,8 +44,12 @@ function Sidebar({name}) {
                 </IconButton>
                 <input type="text" placeholder="search for messages"></input>
             </div>
-
+            <div className="sidebar-new-join">
+                
+            </div>
             <div className="sidebar-contacts" >
+                <Contacts room={room} />
+                {/* <Contacts />
                 <Contacts />
                 <Contacts />
                 <Contacts />
@@ -54,9 +59,7 @@ function Sidebar({name}) {
                 <Contacts />
                 <Contacts />
                 <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
+                <Contacts /> */}
             </div>
         </div>
     )

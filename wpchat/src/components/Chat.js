@@ -8,7 +8,11 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import MicIcon from '@mui/icons-material/Mic';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CloseIcon from '@mui/icons-material/Close';
-function Chat({ user, room, socket }) {
+import InputEmoji from "react-input-emoji";
+import { io } from "socket.io-client";
+const socket = io("http://localhost:5000", { transports: ['websocket', 'polling', 'flashsocket'] })
+
+function Chat({ user, room }) {
     const [roomName, setRoomName] = useState("");
     const [newMsg, setNewMsg] = useState("");
     const [messages, setMessages] = useState([]);
@@ -18,7 +22,10 @@ function Chat({ user, room, socket }) {
     useEffect(() => {
         socket.emit("new-join", { user, room });
         setChatwidth(document.querySelector('.chat-message-container').offsetWidth)
-    }, [])
+        return ()=> {
+             if(socket) socket.disconnect();
+        }
+    },[])
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -53,9 +60,28 @@ function Chat({ user, room, socket }) {
 
         return strTime;
     }
-    const dosome = (e) => {
-        if (e.keyCode === 13) {
-            e.target.value = "";
+    // const dosome = (e) => {
+    //     if (e.keyCode === 13) {
+    //         e.target.value = "";
+    //         const strTime = getTime();
+    //         const msg = {
+    //             roomId: room,
+    //             user: user,
+    //             message: newMsg,
+    //             time: strTime,
+    //         }
+    //         socket.emit("new-msg", msg);
+    //         const addNew = async () => {
+    //             await setMessages(m => [...m, msg]);
+    //             return true;
+    //         }
+    //         addNew().then((res) => {
+    //             scrollToBottom();
+    //         });
+    //     }
+    // }
+
+    function doIt(){
             const strTime = getTime();
             const msg = {
                 roomId: room,
@@ -71,9 +97,7 @@ function Chat({ user, room, socket }) {
             addNew().then((res) => {
                 scrollToBottom();
             });
-        }
     }
-
     function scrollToBottom() {
         inp.current.scrollIntoView({ behavior: "smooth" });
     }
@@ -112,7 +136,14 @@ function Chat({ user, room, socket }) {
         },
         body: data
         })
-        console.log(data);
+        if (FileReader)
+	    {
+		var reader = new FileReader();
+		reader.readAsDataURL(input.files[0]);
+		reader.onload = function (e) {
+			setGrpSrc(e.target.result) ;
+		}
+	    }
         groupPicHide();
         
     }
@@ -135,7 +166,7 @@ function Chat({ user, room, socket }) {
     return (
         <>
         <div className="groupPic-div"> 
-            <IconButton  className ="groupPic-div-crossicon" onClick={groupPicHide}  >
+            <IconButton sx={{color:"white"}} className ="groupPic-div-crossicon" onClick={groupPicHide}  >
                 <CloseIcon />
             </IconButton>
             <div className="group-pic-image">
@@ -167,24 +198,30 @@ function Chat({ user, room, socket }) {
                     </div>
                 </div>
                 <div className="chat-header-right">
-                    <IconButton onClick={tog}>
+                    <div className="cht">
+                    <IconButton sx={{color:"white"}} onClick={tog}>
                         <CameraAltIcon />
                     </IconButton>
-                    <IconButton onClick={openFileOption}>
+                    <IconButton sx={{color:"white"}} onClick={openFileOption}>
                         <AttachFileIcon />
                     </IconButton>
-                    <IconButton onClick={openChatOption}>
+                    <IconButton sx={{color:"white"}} onClick={openChatOption}>
                         <MoreVertIcon  />
                     </IconButton>
-                    <div className="chat-header-right-options">
-                        <h2>hello</h2>
-                        <h2>hello</h2>
-                        <h2>hello</h2>
-                    </div>
                     <input type="file" multiple={true} id="file1" style={{ display: "none" }}></input>
+                    </div>
+                    <div className="chat-header-right-options">
+                    <IconButton sx={{color:"white"}} onClick={tog} >
+                        <CameraAltIcon />
+                    </IconButton>
+                    <IconButton sx={{color:"white"}} onClick={openFileOption}>
+                        <AttachFileIcon />
+                    </IconButton>
+                    </div>
+                    
                 </div>
                 <div className="chat-header-right-responsive">
-                    <IconButton onClick={openChatOption}>
+                    <IconButton sx={{color:"white"}} onClick={openChatOption}>
                         <MoreVertIcon  />
                     </IconButton>
                 </div>
@@ -212,14 +249,15 @@ function Chat({ user, room, socket }) {
             </div>
             <div className="chat-footer">
                 <div className="chat-footer-left">
-                    <IconButton>
+                    {/* <IconButton>
                         <EmojiEmotionsIcon className="icons" />
                     </IconButton>
-                    <input onChange={(e) => setNewMsg(e.target.value)} onKeyUp={dosome} type="text" placeholder="new message" id="msg-input"></input>
-                </div>
-                <IconButton>
+                    <input onChange={(e) => setNewMsg(e.target.value)} onKeyUp={dosome} type="text" placeholder="new message" id="msg-input"></input> */}
+                    <IconButton sx={{color:"white"}}>
                     <MicIcon className="icons" />
-                </IconButton>
+                    </IconButton>
+                </div>
+                <InputEmoji cleanOnEnter="true" onEnter={doIt} onChange={e=>setNewMsg(e)} fontSize={20}/>
             </div>
         </div>
         </>

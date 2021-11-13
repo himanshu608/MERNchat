@@ -1,9 +1,11 @@
 .sidebar{
     display: flex;
-    flex:0.45;
-    background-color:aliceblue;
+    flex:0.35;
+
     flex-direction: column;
     border-radius: 38px 0 0 0;
+    /* background-color:#FF5151; */
+    background-color:#142F43;
 }
 
 .sidebar-heading{
@@ -12,9 +14,15 @@
     flex-direction: row;
     justify-content: space-between;
     padding:10px;
-    background-color:rgb(155, 248, 252);
+    /* background-color:#88E0EF; */
+    /* color:rgb(209, 224, 226); */
+    color:#FF5151;
+    height: 100px;
     align-items:center;
     border-radius: 38px 0 0 0;
+    /* border-bottom:1px solid #FF5151; */
+    padding-top:18px;
+    padding-bottom: 19px;
 }
 .sidebar-header-right{
     margin-left:10px;
@@ -29,15 +37,19 @@
     margin-left: 10px;
 }
 .sidebar-search{
+    margin-top:5px;
     display: flex;
     flex-direction:row;
     height:50px;
     padding-top:5px;
     padding-left: 10px;
     align-items:center;
+    background-color:aliceblue;
+    border:2px solid #142F43;
+    border-radius: 5px;
 }
 .sidebar-search > input{
-    font-size: 1.2rem;
+    /* font-size: 1.2rem; */
     padding:0px 8px 0px 8px;
     border:none;
     border-radius:10px;
@@ -50,20 +62,26 @@
 }
 .sidebar-contacts{
     overflow:auto;
+    color:rgb(209, 224, 226);
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  
+
+}
+.sidebar-contacts::-webkit-scrollbar{
+    display:none;
 }
 
 .sidebar-header-right-responsive{
     display: none;
     position: absolute;
     flex-direction:column;
-    background-color:aquamarine;
+    background-color:#142F43;
     padding: 10px;
     float: right;
     right:40px;
     border-radius: 10px 0px 10px 10px;
-    border-bottom: 1px dotted black;
-    box-shadow:  0px -5px 41px #a6a6a6,
-                 10px 10px 41px #ffffff;
+    border-bottom: 1px solid black;
+    box-shadow: 0px 0px 20px white;
 }
 
 .sidebar-header-right-responsive.hide{

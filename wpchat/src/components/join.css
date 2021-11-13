@@ -7,7 +7,7 @@
 .join{
     height:100vh;
     width:100vw;
-    background-color:darkslategray;
+    background-color: #142F43;
     display:grid;
     place-items: center;
 }
@@ -64,4 +64,13 @@
     font-size:1.2rem;
     color:whitesmoke;
     cursor: pointer;
+}
+
+@media screen and (max-width:430px) {
+
+    .join-body{
+        width:100vw;
+        height:70vh;
+    }
+    
 }

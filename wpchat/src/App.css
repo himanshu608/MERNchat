@@ -7,9 +7,7 @@
   display:grid;
   place-items: center;
   height:100vh;
-  background-color:#e3e3f3;
-
-  
+  background-color:#d6e4ec;
 }
 .appbody{
   width:95vw;
@@ -18,11 +16,17 @@
   display:flex;
   flex:1;
   border-radius: 38px;
+  background-color:#142F43;
   background: linear-gradient(315deg, #ffffff, #e6e6e6);
-  box-shadow:  -7px -7px 42px #666666,
-             7px 7px 42px #ffffff;
+  /* box-shadow:  -7px -7px 42px #666666,
+             7px 7px 42px #ffffff; */
 }
 
-@media screen and (min-width: 768px) {
-  
+@media screen and (max-width: 600px) {
+  .App{
+    overflow:scroll;
+  }
+  .appbody{
+    width:600px;
+  }
 }

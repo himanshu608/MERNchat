@@ -8,7 +8,7 @@ import {
   Route,
 } from "react-router-dom";
 import Join from './components/Join';
-window.ethereum.autoRefreshOnNetworkChange = false;
+// window.ethereum.autoRefreshOnNetworkChange = false;
 
 ReactDOM.render(
  
