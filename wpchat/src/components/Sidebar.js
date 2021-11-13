@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{ useState, useEffect} from 'react'
 import './sidebar.css';
 import {Link} from 'react-router-dom';
 import {Avatar, IconButton} from '@mui/material';
@@ -8,10 +8,30 @@ import DonutLargeIcon from '@mui/icons-material/DonutLarge';
 import SearchIcon from '@mui/icons-material/Search';
 import Contacts from './Contacts';
 import LogoutIcon from '@mui/icons-material/Logout';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+
 function Sidebar({name , room}) {
+    const [grpSrc,setGrpSrc]= useState()
     function sideHide(){
         document.querySelector('.sidebar-header-right-responsive').classList.toggle('hide');
     }
+
+    useEffect(() => {
+        fetch('http://localhost:5000/groupPics').then(res => {
+             return res.text();
+         }).then(data => {
+             data = JSON.parse(data)
+             data.map(i=>{
+                 if(i.roomId === room){
+                    const ig =`data:${i.img.contentType};base64,${Buffer.from(i.img.data).toString('base64')}`
+                    setGrpSrc(ig);
+                 }
+             })
+             
+         })
+         .catch(err => {console.log(err);});
+    },[])
+
     return (
         <div className="sidebar">
             <div className="sidebar-heading">
@@ -34,6 +54,9 @@ function Sidebar({name , room}) {
                         <IconButton sx={{color:"white"}} >
                             <a href="/" style={{color:"white"}}><LogoutIcon /></a>
                         </IconButton>
+                        <IconButton sx={{color:"white"}}>
+                            <AddBoxIcon />
+                        </IconButton>
                     </div>
                 </div>
             </div>
@@ -48,18 +71,8 @@ function Sidebar({name , room}) {
                 
             </div>
             <div className="sidebar-contacts" >
-                <Contacts room={room} />
-                {/* <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts /> */}
+                <Contacts  name={name} room={"1234"} src={grpSrc}/>
+                <Contacts name={name} room={"2555"} src={grpSrc}/>
             </div>
         </div>
     )

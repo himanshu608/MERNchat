@@ -104,6 +104,11 @@ app.post('/groupPicUpload/:id', upload.single('image'), function (req, res) {
     
     res.status(204).end()
 });
+
+
+
+
+
 //socket io connection
 io.on('connection', (socket) => {
     var roomid,username;
@@ -128,6 +133,12 @@ io.on('connection', (socket) => {
         })
     })
 })
+
+
+
+
+
+
 server.listen(PORT, () => {
     console.log("listening on port " + PORT);
 });

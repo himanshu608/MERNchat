@@ -40,7 +40,6 @@
     /* background-color:rgb(31, 24, 88); */
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  
-    
 }
 
 .chat-message-container::-webkit-scrollbar{
@@ -55,7 +54,7 @@
     padding: 6px;
     max-width:28vw;
     min-width: 200px;
-    margin-bottom: 40px;
+    margin-bottom: 50px;
     background-color:black;
     font-weight: 450;
     color:white;
@@ -105,7 +104,8 @@
     flex:1;
 }
 .chat-footer-left > input{
-    height:30px;
+    margin-left: 5px;
+    height:50px;
     padding:10px;
     outline:0;
     border: none;
@@ -158,8 +158,10 @@
     padding:15px;
     z-index: 5;
     border-radius: 10px 0px 10px 10px;
-    border-bottom: 1px solid crimson;
+    border-bottom: 1px solid white;
+    border-top: 1px solid white;
     background: #142F43;
+    box-shadow: 0px 0px 3px white;
     /* box-shadow:  0px -5px 41px #a6a6a6,
                  10px 10px 41px #ffffff; */
 }
@@ -306,4 +308,15 @@
       display:none;
   }
 
- 
+ .msg-input{
+     max-width: 60vw;
+     max-height: 100px;
+     overflow-y: auto;
+ }
+
+.emoji-show-div{
+     width:100%;
+     position: relative;
+     z-index: 15;
+    
+ }

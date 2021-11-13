@@ -17,7 +17,15 @@
     align-items: center;
     padding:10px;
     border-top:1px solid black;
+    justify-items: space-between;
 }
 .contact-info{
     margin-left: 20px;
+}
+
+.contact-left{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    padding:10px;
 }

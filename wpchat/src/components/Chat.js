@@ -8,7 +8,7 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import MicIcon from '@mui/icons-material/Mic';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CloseIcon from '@mui/icons-material/Close';
-import InputEmoji from "react-input-emoji";
+import Picker from 'emoji-picker-react';
 import { io } from "socket.io-client";
 const socket = io("http://localhost:5000", { transports: ['websocket', 'polling', 'flashsocket'] })
 
@@ -19,6 +19,15 @@ function Chat({ user, room }) {
     const inp = useRef();
     const [chatwidth, setChatwidth] = useState();
     const [grpSrc , setGrpSrc] = useState();
+    const [showPicker, setShowPicker] = useState(false);
+    const [tempMsg, setTempMsg] = useState("");
+
+    const onEmojiClick = (event, emojiObject) => {
+        setTempMsg(prevInput => prevInput + emojiObject.emoji);
+        setNewMsg(prevInput => prevInput + emojiObject.emoji);
+        // setShowPicker(false);
+        document.querySelector('#msg-input').focus();
+      };
     useEffect(() => {
         socket.emit("new-join", { user, room });
         setChatwidth(document.querySelector('.chat-message-container').offsetWidth)
@@ -60,9 +69,30 @@ function Chat({ user, room }) {
 
         return strTime;
     }
-    // const dosome = (e) => {
-    //     if (e.keyCode === 13) {
-    //         e.target.value = "";
+    const dosome = (e) => {
+        setShowPicker(false)
+        if (e.keyCode === 13 && e.target.value !== "") {
+            setTempMsg("");
+            const strTime = getTime();
+            const msg = {
+                roomId: room,
+                user: user,
+                message: newMsg,
+                time: strTime,
+            }
+            socket.emit("new-msg", msg);
+            const addNew = async () => {
+                await setMessages(m => [...m, msg]);
+                return true;
+            }
+            setNewMsg("");
+            addNew().then((res) => {
+                scrollToBottom();
+            });
+        }
+    }
+
+    // function doIt(){
     //         const strTime = getTime();
     //         const msg = {
     //             roomId: room,
@@ -78,26 +108,7 @@ function Chat({ user, room }) {
     //         addNew().then((res) => {
     //             scrollToBottom();
     //         });
-    //     }
     // }
-
-    function doIt(){
-            const strTime = getTime();
-            const msg = {
-                roomId: room,
-                user: user,
-                message: newMsg,
-                time: strTime,
-            }
-            socket.emit("new-msg", msg);
-            const addNew = async () => {
-                await setMessages(m => [...m, msg]);
-                return true;
-            }
-            addNew().then((res) => {
-                scrollToBottom();
-            });
-    }
     function scrollToBottom() {
         inp.current.scrollIntoView({ behavior: "smooth" });
     }
@@ -174,6 +185,8 @@ function Chat({ user, room }) {
          })
          .catch(err => {console.log(err);});
     },[])
+
+    
     return (
         <>
         <div className="groupPic-div"> 
@@ -257,17 +270,23 @@ function Chat({ user, room }) {
                     <IconButton> <KeyboardArrowDownIcon sx={{ color: "white", width: "20px", height: "20px" }} /></IconButton>
                 </i>
             </div>
+            <div className="emoji-show-div d-flex justify-content-center">
+            {showPicker && <Picker
+            pickerStyle={{ width: '70%'}}
+             onEmojiClick={onEmojiClick} />}
+            </div>
             <div className="chat-footer">
                 <div className="chat-footer-left">
-                    {/* <IconButton>
+                    <IconButton sx={{color:"white"}} onClick={() => setShowPicker(val => !val)}>
                         <EmojiEmotionsIcon className="icons" />
                     </IconButton>
-                    <input onChange={(e) => setNewMsg(e.target.value)} onKeyUp={dosome} type="text" placeholder="new message" id="msg-input"></input> */}
-                    <IconButton sx={{color:"white"}}>
+                    <input  value={tempMsg} onChange={(e) =>{setTempMsg(e.target.value);setNewMsg(e.target.value)}} onKeyUp={dosome} type="text" placeholder="new message" id="msg-input"></input>
+                    
+                </div>
+                <IconButton sx={{color:"white"}}>
                     <MicIcon className="icons" />
                     </IconButton>
-                </div>
-                <InputEmoji cleanOnEnter="true" onEnter={doIt} onChange={e=>setNewMsg(e)} fontSize={20}/>
+                    
             </div>
         </div>
         </>

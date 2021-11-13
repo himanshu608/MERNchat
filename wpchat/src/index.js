@@ -15,7 +15,7 @@ ReactDOM.render(
   <Router>
     <Switch>
       <Route exact path="/" component={Join} />
-      <Route  path="/chat" component={App} />
+      <Route exact path="/chat" component={App} />
     </Switch>
   </Router>
   ,

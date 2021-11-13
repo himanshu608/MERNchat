@@ -80,8 +80,10 @@
     float: right;
     right:40px;
     border-radius: 10px 0px 10px 10px;
-    border-bottom: 1px solid black;
-    box-shadow: 0px 0px 20px white;
+    border-bottom: 1px solid white;
+    border-top: 1px solid white;
+    box-shadow: 0px 0px 3px white;
+    z-index:6;
 }
 
 .sidebar-header-right-responsive.hide{
