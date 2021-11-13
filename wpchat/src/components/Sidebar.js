@@ -11,7 +11,10 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 
 function Sidebar({name , room}) {
-    const [grpSrc,setGrpSrc]= useState()
+    const [grpSrc,setGrpSrc]= useState();
+    const [newRoomId,setNewRoomId]= useState();
+    const [joinedRooms,setJoinedRooms] = useState([room]);
+
     function sideHide(){
         document.querySelector('.sidebar-header-right-responsive').classList.toggle('hide');
     }
@@ -31,7 +34,10 @@ function Sidebar({name , room}) {
          })
          .catch(err => {console.log(err);});
     },[])
-
+    function newRoomJoin(){
+        setJoinedRooms(prev=> [...prev,newRoomId]);
+        document.querySelector('#newrmid').value="";
+    }
     return (
         <div className="sidebar">
             <div className="sidebar-heading">
@@ -60,7 +66,10 @@ function Sidebar({name , room}) {
                     </div>
                 </div>
             </div>
-
+            <div className="join-new-room">
+                <input id="newrmid" onChange={e=>setNewRoomId(e.target.value)} type="text" placeholder="room id"></input>
+                <button className="px-3" onClick={newRoomJoin}>Join</button>
+            </div>
             <div className="sidebar-search">
                 <IconButton >
                     <SearchIcon className="icons"/>
@@ -71,8 +80,13 @@ function Sidebar({name , room}) {
                 
             </div>
             <div className="sidebar-contacts" >
-                <Contacts  name={name} room={"1234"} src={grpSrc}/>
-                <Contacts name={name} room={"2555"} src={grpSrc}/>
+                {/* <Contacts  name={name} room={"1234"} src={grpSrc}/>
+                <Contacts name={name} room={"2555"} src={grpSrc}/> */}
+                {joinedRooms.map((rm)=>{
+                    return (
+                        <Contacts name={name} room={rm}></Contacts>
+                    )
+                })}
             </div>
         </div>
     )

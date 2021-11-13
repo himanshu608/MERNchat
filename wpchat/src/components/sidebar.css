@@ -89,3 +89,34 @@
 .sidebar-header-right-responsive.hide{
     display:flex;
 }
+.join-new-room{
+    /* background-color:aliceblue; */
+    border:2px solid #142F43;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding:10px;
+    align-items: center;
+}
+
+.join-new-room > input{
+    padding:0px 8px 0px 8px;
+    border:none;
+    border-radius:10px;
+    max-width: 200px;
+    outline:0;
+    height:35px;
+    flex:1;
+    margin-right: 20px;
+    background-color: aliceblue;
+}
+
+.join-new-room > button{
+    border-radius: 20px;
+    padding:4px;
+    font-size:large;
+    font-weight: bold;
+    background-color:crimson;
+    color:white;
+    border:none;
+}
