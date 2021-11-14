@@ -9,6 +9,10 @@ import MicIcon from '@mui/icons-material/Mic';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CloseIcon from '@mui/icons-material/Close';
 import Picker from 'emoji-picker-react';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { Link, useHistory } from "react-router-dom";
+
+
 import { io } from "socket.io-client";
 const socket = io("http://localhost:5000", { transports: ['websocket', 'polling', 'flashsocket'] })
 
@@ -21,7 +25,7 @@ function Chat({ user, room }) {
     const [grpSrc , setGrpSrc] = useState();
     const [showPicker, setShowPicker] = useState(false);
     const [tempMsg, setTempMsg] = useState("");
-
+    const history = useHistory();
     const onEmojiClick = (event, emojiObject) => {
         setTempMsg(prevInput => prevInput + emojiObject.emoji);
         setNewMsg(prevInput => prevInput + emojiObject.emoji);
@@ -186,6 +190,11 @@ function Chat({ user, room }) {
          .catch(err => {console.log(err);});
     },[])
 
+    function exitGroup(){
+        fetch(`http://localhost:5000/exitgroup?user=${user}&&room=${room}`);
+        history.goBack();
+        document.querySelector('.chat-header-right-options').classList.toggle('hide');
+    }
     
     return (
         <>
@@ -240,6 +249,9 @@ function Chat({ user, room }) {
                     <IconButton sx={{color:"white"}} onClick={openFileOption}>
                         <AttachFileIcon />
                     </IconButton>
+                    <Link to={`/chat?name=${user}&&room=${1234}`} ><IconButton onClick={exitGroup} sx={{color:"white"}}>
+                        <ExitToAppIcon />
+                    </IconButton></Link>
                     </div>
                     
                 </div>

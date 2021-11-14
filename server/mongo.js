@@ -16,4 +16,9 @@ const groupPic = mongoose.Schema({
     }
 })
 
-module.exports = {Message: mongoose.model('messagedata', Message) , groupPic : mongoose.model('groupsImg',groupPic)};
+const roomIdPerUser = mongoose.Schema({
+    username:String,
+    rooms:[String],
+})
+
+module.exports = {Message: mongoose.model('messagedata', Message) , groupPic : mongoose.model('groupsImg',groupPic) , roomIdPerUser : mongoose.model('roomIdPerUser',roomIdPerUser)};

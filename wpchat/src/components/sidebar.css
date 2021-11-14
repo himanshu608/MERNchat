@@ -1,7 +1,6 @@
 .sidebar{
     display: flex;
     flex:0.35;
-
     flex-direction: column;
     border-radius: 38px 0 0 0;
     /* background-color:#FF5151; */
@@ -119,4 +118,29 @@
     background-color:crimson;
     color:white;
     border:none;
+}
+
+
+.zero-rooms-div{
+    top:-110vh;
+    
+    display:none;
+}
+
+.zero-rooms-div.hide{
+    position:absolute;
+    width:100vw;
+    height:100vh;
+    z-index: 20;
+    background-color:black;
+    top:0vh;
+    left:0vw;
+    display: block;
+}
+
+.zero-rooms-div-info{
+    position: relative;
+    top:30vh;
+    left: 10px;
+    right: 10px;
 }

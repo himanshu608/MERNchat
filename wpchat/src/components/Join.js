@@ -22,7 +22,18 @@ function Join() {
         if(!username || !roomid){
             e.preventDefault();
         }
-        else return null;
+        else {
+            fetch('http://localhost:5000/roomidadd', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({username: username, rooms: roomid})
+            }).then(()=>{
+                return null;
+            })
+            
+        }
     }
 
     return (
