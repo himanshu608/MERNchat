@@ -11,7 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Picker from 'emoji-picker-react';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { Link, useHistory ,useLocation } from "react-router-dom";
-
+import { ClapSpinner } from "react-spinners-kit";
 
 import { io } from "socket.io-client";
 const socket = io("http://localhost:5000", { transports: ['websocket', 'polling', 'flashsocket'] })
@@ -27,6 +27,7 @@ function Chat({ user, room }) {
     const [tempMsg, setTempMsg] = useState("");
     const history = useHistory();
     const location = useLocation();
+    const [chatAnim,setChatAnim] = useState(true);
     const onEmojiClick = (event, emojiObject) => {
         setTempMsg(prevInput => prevInput + emojiObject.emoji);
         setNewMsg(prevInput => prevInput + emojiObject.emoji);
@@ -46,6 +47,7 @@ function Chat({ user, room }) {
                 const res = await fetch("http://localhost:5000/messages/sync")
                 const data = await res.json()
                 setMessages(data);
+                setChatAnim(false);
             }
             catch (err) {
                 console.log(err)
@@ -176,7 +178,7 @@ function Chat({ user, room }) {
 	    }
     }
     useEffect(() => {
-        
+
         fetch('http://localhost:5000/groupPics').then(res => {
              return res.text();
          }).then(data => {
@@ -195,6 +197,7 @@ function Chat({ user, room }) {
     function exitGroup(){
         fetch(`http://localhost:5000/exitgroup?user=${user}&&room=${room}`);
         history.goBack();
+        console.log(history)
         document.querySelector('.chat-header-right-options').classList.toggle('hide');
     }
     
@@ -251,7 +254,7 @@ function Chat({ user, room }) {
                     <IconButton sx={{color:"white"}} onClick={openFileOption}>
                         <AttachFileIcon />
                     </IconButton>
-                    <Link to={`/chat?name=${user}&&room=${1234}`} ><IconButton onClick={exitGroup} sx={{color:"white"}}>
+                    <Link to={`/chat?name=${user}&&room=${room}`} ><IconButton onClick={exitGroup} sx={{color:"white"}}>
                         <ExitToAppIcon />
                     </IconButton></Link>
                     </div>
@@ -265,7 +268,7 @@ function Chat({ user, room }) {
             </div>
 
             <div onScroll={hidebutn} className="chat-message-container">
-                {messages.map((data) => {
+                {chatAnim?<div className="chatLoad"><ClapSpinner /></div> : messages.map((data) => {
                     if (data.roomId === room) {
                         return (
                             <p key={(data._id?data._id:Math.random())} className={`chat-message  ${data.user !== user ? '' : ' chat-message-send'}`} >

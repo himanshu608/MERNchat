@@ -10,15 +10,14 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 import { useLocation } from 'react-router';
 
-
 function Sidebar({ name, room  }) {
     // const [grpSrc, setGrpSrc] = useState();
     const [newRoomId, setNewRoomId] = useState();
     const [joinedRooms, setJoinedRooms] = useState([room]);
     const location = useLocation();
-    function sideHide() {
-        document.querySelector('.sidebar-header-right-responsive').classList.toggle('hide');
-    }
+    // function sideHide() {
+    //     document.querySelector('.sidebar-header-right-responsive').classList.toggle('hide');
+    // }
 
     useEffect(() => {
         fetch(`http://localhost:5000/roomidperuser/${name}`).then(res => {
@@ -37,10 +36,9 @@ function Sidebar({ name, room  }) {
                 setJoinedRooms(data[0].rooms);
             }
         })
-        
-    }, [location])
+    }, [location.search])
 
-
+   
     // useEffect(() => {
     //     fetch('http://localhost:5000/groupPics').then(res => {
     //         return res.text();
@@ -59,7 +57,6 @@ function Sidebar({ name, room  }) {
 
 
     function newRoomJoin() {
-        
         var ispre=false;
         joinedRooms.map(rm=>{
             if(rm === newRoomId) {
@@ -112,11 +109,14 @@ function Sidebar({ name, room  }) {
                         </div>
                         <div className="sidebar-header-right">
 
-                            <IconButton sx={{ color: "white" }} onClick={sideHide}>
+                            {/* <IconButton sx={{ color: "white" }} onClick={sideHide}>
                                 <MoreVertIcon />
-                            </IconButton>
+                            </IconButton> */}
+                            <IconButton sx={{ color: "white" }} >
+                                    <a href="/" style={{ color: "white" }}><LogoutIcon /></a>
+                                </IconButton>
                             <div className="sidebar-header-right-responsive">
-                                <IconButton sx={{ color: "white" }} >
+                                {/* <IconButton sx={{ color: "white" }} >
                                     <ChatIcon />
                                 </IconButton>
                                 <IconButton sx={{ color: "white" }} >
@@ -124,7 +124,7 @@ function Sidebar({ name, room  }) {
                                 </IconButton>
                                 <IconButton sx={{ color: "white" }} >
                                     <a href="/" style={{ color: "white" }}><LogoutIcon /></a>
-                                </IconButton>
+                                </IconButton> */}
         
                             </div>
                         </div>
@@ -145,7 +145,7 @@ function Sidebar({ name, room  }) {
                     <div className="sidebar-contacts" >
                         {joinedRooms.map((rm) => {
                             return (
-                                <Contacts key={Math.random()} name={name} room={rm}></Contacts>
+                             <Contacts  name={name} room={rm}></Contacts>
                             )
                         })}
                     </div>

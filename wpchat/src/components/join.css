@@ -74,3 +74,31 @@
     }
     
 }
+
+.loading-div{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    backdrop-filter:none;
+    top:100vh;
+    z-index: 10;
+}
+
+.load{
+    display: none;
+    
+}
+
+.loading-div.hide{
+    backdrop-filter:blur(30px);
+    
+    display: block;
+    top:0px;
+}
+
+.load.hide{
+    position: relative;
+    left:50vw;
+    display: block;
+}
