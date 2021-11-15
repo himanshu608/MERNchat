@@ -12,7 +12,7 @@ import { useLocation } from 'react-router';
 
 
 function Sidebar({ name, room  }) {
-    const [grpSrc, setGrpSrc] = useState();
+    // const [grpSrc, setGrpSrc] = useState();
     const [newRoomId, setNewRoomId] = useState();
     const [joinedRooms, setJoinedRooms] = useState([room]);
     const location = useLocation();
@@ -28,7 +28,7 @@ function Sidebar({ name, room  }) {
             if(data.length===0){
                 console.log("new user")
             }else{
-                if(data[0].rooms.length == 0){
+                if(data[0].rooms.length === 0){
                     document.querySelector('.zero-rooms-div').classList.add('hide');
                     setTimeout(()=>{
                         document.querySelector('.exitbtnn').click();
@@ -41,28 +41,28 @@ function Sidebar({ name, room  }) {
     }, [location])
 
 
-    useEffect(() => {
-        fetch('http://localhost:5000/groupPics').then(res => {
-            return res.text();
-        }).then(data => {
-            data = JSON.parse(data)
-            data.map(i => {
-                if (i.roomId === room) {
-                    const ig = `data:${i.img.contentType};base64,${Buffer.from(i.img.data).toString('base64')}`
-                    setGrpSrc(ig);
-                }
-            })
+    // useEffect(() => {
+    //     fetch('http://localhost:5000/groupPics').then(res => {
+    //         return res.text();
+    //     }).then(data => {
+    //         data = JSON.parse(data)
+    //         data.map(i => {
+    //             if (i.roomId === room) {
+    //                 const ig = `data:${i.img.contentType};base64,${Buffer.from(i.img.data).toString('base64')}`
+    //                 setGrpSrc(ig);
+    //             }
+    //         })
 
-        })
-            .catch(err => { console.log(err); });
-    }, [])
+    //     })
+    //         .catch(err => { console.log(err); });
+    // }, [])
 
 
     function newRoomJoin() {
         
         var ispre=false;
         joinedRooms.map(rm=>{
-            if(rm == newRoomId) {
+            if(rm === newRoomId) {
                 ispre = true;
             }
         })
@@ -145,7 +145,7 @@ function Sidebar({ name, room  }) {
                     <div className="sidebar-contacts" >
                         {joinedRooms.map((rm) => {
                             return (
-                                <Contacts name={name} room={rm}></Contacts>
+                                <Contacts key={Math.random()} name={name} room={rm}></Contacts>
                             )
                         })}
                     </div>

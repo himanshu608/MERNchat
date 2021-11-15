@@ -1,9 +1,26 @@
 import { Avatar, IconButton } from '@mui/material'
-import React from 'react'
+import React ,{ useState , useEffect} from 'react'
 import './contact.css';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import { Link } from 'react-router-dom';
-function Contacts({name,room,src}) {
+function Contacts({name,room}) {
+    const [src,setGrpSrc] = useState();
+
+    useEffect(() => {
+        fetch('http://localhost:5000/groupPics').then(res => {
+             return res.text();
+         }).then(data => {
+             data = JSON.parse(data)
+             data.map(i=>{
+                 if(i.roomId === room){
+                    const ig =`data:${i.img.contentType};base64,${Buffer.from(i.img.data).toString('base64')}`
+                    setGrpSrc(ig);
+                 }
+             })
+             
+         })
+         .catch(err => {console.log(err);});
+    },[])
     return (
         <div className="contacts d-grid">
             <div className="contact row">

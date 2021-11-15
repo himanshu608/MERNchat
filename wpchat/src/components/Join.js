@@ -31,6 +31,8 @@ function Join() {
             body: JSON.stringify({username: username, rooms: roomid})
             }).then(()=>{
                 return null;
+            }).catch(err => {
+                console.error(err.message);
             })
             
         }

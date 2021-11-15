@@ -10,7 +10,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CloseIcon from '@mui/icons-material/Close';
 import Picker from 'emoji-picker-react';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory ,useLocation } from "react-router-dom";
 
 
 import { io } from "socket.io-client";
@@ -26,6 +26,7 @@ function Chat({ user, room }) {
     const [showPicker, setShowPicker] = useState(false);
     const [tempMsg, setTempMsg] = useState("");
     const history = useHistory();
+    const location = useLocation();
     const onEmojiClick = (event, emojiObject) => {
         setTempMsg(prevInput => prevInput + emojiObject.emoji);
         setNewMsg(prevInput => prevInput + emojiObject.emoji);
@@ -53,13 +54,14 @@ function Chat({ user, room }) {
         fetchData()
         setRoomName(room);
     }, [room])
+
     useEffect(() => {
         socket.on("new-msg", (msg) => {
             msg.recived = true;
             setMessages(m => [...m, msg]);
         })
-        console.log("running")
     }, [])
+
     function getTime() {
         var hours = new Date().getHours();
         var minutes = new Date().getMinutes();
@@ -173,8 +175,8 @@ function Chat({ user, room }) {
 		}
 	    }
     }
-
     useEffect(() => {
+        
         fetch('http://localhost:5000/groupPics').then(res => {
              return res.text();
          }).then(data => {
@@ -188,7 +190,7 @@ function Chat({ user, room }) {
              
          })
          .catch(err => {console.log(err);});
-    },[])
+    },[location])
 
     function exitGroup(){
         fetch(`http://localhost:5000/exitgroup?user=${user}&&room=${room}`);
