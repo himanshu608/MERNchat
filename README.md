@@ -11,3 +11,4 @@ And mongoose to store data in MongoDb.
 #Previews
 
 ![Screenshot 2021-11-15 193002](https://user-images.githubusercontent.com/61231732/141795510-099f6824-cbc6-441a-9468-cb74b54b1e43.png)
+![Screenshot 2021-11-15 193058](https://user-images.githubusercontent.com/61231732/141795691-ac0fa1ec-52f8-4760-8716-3d5568a2c534.png)
