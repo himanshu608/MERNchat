@@ -119,4 +119,5 @@ dist
 
 package-lock.json
 
-uploads/
+/uploads/
+/server/uploads/

@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import {Avatar} from '@mui/material';
-import {Link} from 'react-router-dom';
+import {Link , useHistory} from 'react-router-dom';
 import './join.css';
-
+import { ImpulseSpinner , CubeSpinner } from "react-spinners-kit";
 function Join() {
     const [username,setUsername] = useState("");
     const [roomid,setRoomid] = useState("");
+    const history = useHistory();
     const stl = {
         color:"white",
         textDecoration: 'none',
@@ -23,22 +24,34 @@ function Join() {
             e.preventDefault();
         }
         else {
+            e.preventDefault();
+            document.querySelector('.loading-div').classList.add('hide');
+            document.querySelector('.load').classList.add('hide');
             fetch('http://localhost:5000/roomidadd', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({username: username, rooms: roomid})
-            }).then(()=>{
-                return null;
             }).catch(err => {
                 console.error(err.message);
             })
-            
+            setTimeout(()=>{
+                history.push(`/chat?name=${username}&&room=${roomid}`);
+            },2500)
         }
     }
 
     return (
+        <>
+        <div className="loading-div  d-grid align-content-center align-items-center">
+            <div className="load  d-flex flex-column justify-content-center">
+             <CubeSpinner  color={"red"}  type={'bars'} size={60} />
+             <div style={{marginTop:"50px",marginLeft:'10px'}}>
+             <ImpulseSpinner />
+             </div>
+            </div>
+        </div>
         <div className="join">
             <div className="join-body">
                 <div className="join-form">
@@ -54,6 +67,7 @@ function Join() {
                 </div>
             </div>
         </div>
+        </>
     )
 }
 
