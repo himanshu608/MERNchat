@@ -9,12 +9,21 @@ import queryString from 'query-string';
 
 
 function App({ location }) {
+
+
   const a = queryString.parse(location.search);
-  
+
+  function scrll(){
+    document.querySelector('.App').scrollBy({
+      top: 0,
+      left: 620,
+      behavior: 'smooth'
+    });
+  }
   return (
     <div className="App">
       <div className="appbody">
-        <Sidebar name={a.name} room={a.room} />
+        <Sidebar name={a.name} room={a.room} scroll={scrll} />
         <Chat user={a.name} room={a.room} />
       </div>
     </div>

@@ -10,7 +10,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 import { useLocation } from 'react-router';
 
-function Sidebar({ name, room  }) {
+function Sidebar({ name, room ,scroll }) {
     // const [grpSrc, setGrpSrc] = useState();
     const [newRoomId, setNewRoomId] = useState();
     const [joinedRooms, setJoinedRooms] = useState([room]);
@@ -18,7 +18,7 @@ function Sidebar({ name, room  }) {
     // function sideHide() {
     //     document.querySelector('.sidebar-header-right-responsive').classList.toggle('hide');
     // }
-
+    
     useEffect(() => {
         fetch(`http://localhost:5000/roomidperuser/${name}`).then(res => {
             return res.text();
@@ -35,10 +35,11 @@ function Sidebar({ name, room  }) {
                 }
                 setJoinedRooms(data[0].rooms);
             }
-        })
+        }).catch(err=>console.log(err.message));
     }, [location.search])
 
-   
+
+      
     // useEffect(() => {
     //     fetch('http://localhost:5000/groupPics').then(res => {
     //         return res.text();
@@ -104,7 +105,7 @@ function Sidebar({ name, room  }) {
         <div className="sidebar">
                     <div className="sidebar-heading">
                         <div className="sidebar-header-left">
-                            <Avatar src={"https://cdn.icon-icons.com/icons2/2643/PNG/512/male_boy_person_people_avatar_icon_159358.png"} sx={{ width: 50, height: 50 }} />
+                            <Avatar  src={"https://cdn.icon-icons.com/icons2/2643/PNG/512/male_boy_person_people_avatar_icon_159358.png"} sx={{ width: 50, height: 50 }} />
                             <h1>{name}</h1>
                         </div>
                         <div className="sidebar-header-right">
@@ -145,7 +146,7 @@ function Sidebar({ name, room  }) {
                     <div className="sidebar-contacts" >
                         {joinedRooms.map((rm) => {
                             return (
-                             <Contacts  name={name} room={rm}></Contacts>
+                             <Contacts  name={name} room={rm} scroll={scroll} ></Contacts>
                             )
                         })}
                     </div>

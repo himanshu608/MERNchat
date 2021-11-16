@@ -3,7 +3,7 @@ import React, { useState, useEffect , memo } from 'react'
 import './contact.css';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import { Link } from 'react-router-dom';
-const Contacts =  memo(({ name, room }) =>{
+const Contacts =  memo(({ name, room ,scroll}) =>{
     const [src, setGrpSrc] = useState();
     useEffect(() => {
         fetch('http://localhost:5000/groupPics').then(res => {
@@ -32,7 +32,7 @@ const Contacts =  memo(({ name, room }) =>{
                     </div>
                 </div>
                 <div className="arrow-div col-2">
-                    <Link to={`/chat?name=${name}&&room=${room}`} ><IconButton sx={{ color: "white" }}>
+                    <Link to={`/chat?name=${name}&&room=${room}`} onClick={scroll}><IconButton sx={{ color: "white" }}>
                         <DoubleArrowIcon />
                     </IconButton></Link>
                 </div>

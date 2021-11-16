@@ -200,6 +200,10 @@ function Chat({ user, room }) {
         console.log(history)
         document.querySelector('.chat-header-right-options').classList.toggle('hide');
     }
+
+    function scrl(){
+        document.querySelector('.micIcn').scrollIntoView();
+    }
     
     return (
         <>
@@ -300,7 +304,7 @@ function Chat({ user, room }) {
                     <input  value={tempMsg} onChange={(e) =>{setTempMsg(e.target.value);setNewMsg(e.target.value)}} onKeyUp={dosome} type="text" placeholder="new message" id="msg-input"></input>
                     
                 </div>
-                <IconButton sx={{color:"white"}}>
+                <IconButton sx={{color:"white"}} className="micIcn">
                     <MicIcon className="icons" />
                     </IconButton>
                     
