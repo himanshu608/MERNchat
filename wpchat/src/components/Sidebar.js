@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import './sidebar.css';
 import { Avatar, IconButton } from '@mui/material';
-import ChatIcon from '@mui/icons-material/Chat';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import DonutLargeIcon from '@mui/icons-material/DonutLarge';
+// import ChatIcon from '@mui/icons-material/Chat';
+// import MoreVertIcon from '@mui/icons-material/MoreVert';
+// import DonutLargeIcon from '@mui/icons-material/DonutLarge';
 import SearchIcon from '@mui/icons-material/Search';
 import Contacts from './Contacts';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -79,7 +79,7 @@ function Sidebar({ name, room ,scroll }) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({username : name ,rooms:newRoomId})
-            })
+            }).catch(err => {console.log(err); })
         }else{
             document.querySelector('#newrmid').value = "";
             alert("room already joined!")

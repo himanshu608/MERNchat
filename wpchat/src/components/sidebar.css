@@ -4,7 +4,10 @@
     flex-direction: column;
     border-radius: 38px 0 0 0;
     /* background-color:#FF5151; */
-    background-color:#142F43;
+    /* background-color:#142F43; */
+    background:#142F43 url('https://images.pexels.com/photos/3473569/pexels-photo-3473569.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');
+    background-repeat: repeat;
+    background-size:200px 200px;
 }
 
 .sidebar-heading{

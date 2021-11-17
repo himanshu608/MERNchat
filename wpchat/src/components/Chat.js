@@ -12,6 +12,7 @@ import Picker from 'emoji-picker-react';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { Link, useHistory ,useLocation } from "react-router-dom";
 import { ClapSpinner } from "react-spinners-kit";
+import SendIcon from '@mui/icons-material/Send';
 
 import { io } from "socket.io-client";
 const socket = io("http://localhost:5000", { transports: ['websocket', 'polling', 'flashsocket'] })
@@ -20,7 +21,6 @@ function Chat({ user, room }) {
     const [roomName, setRoomName] = useState("");
     const [newMsg, setNewMsg] = useState("");
     const [messages, setMessages] = useState([]);
-    const inp = useRef();
     const [chatwidth, setChatwidth] = useState();
     const [grpSrc , setGrpSrc] = useState();
     const [showPicker, setShowPicker] = useState(false);
@@ -28,6 +28,9 @@ function Chat({ user, room }) {
     const history = useHistory();
     const location = useLocation();
     const [chatAnim,setChatAnim] = useState(true);
+    const [fileName,setFileName] = useState("hii");
+
+
     const onEmojiClick = (event, emojiObject) => {
         setTempMsg(prevInput => prevInput + emojiObject.emoji);
         setNewMsg(prevInput => prevInput + emojiObject.emoji);
@@ -77,7 +80,9 @@ function Chat({ user, room }) {
 
         return strTime;
     }
+
     const dosome = (e) => {
+        setChatAnim(false)
         setShowPicker(false)
         if (e.keyCode === 13 && e.target.value !== "") {
             setTempMsg("");
@@ -99,26 +104,8 @@ function Chat({ user, room }) {
             });
         }
     }
-
-    // function doIt(){
-    //         const strTime = getTime();
-    //         const msg = {
-    //             roomId: room,
-    //             user: user,
-    //             message: newMsg,
-    //             time: strTime,
-    //         }
-    //         socket.emit("new-msg", msg);
-    //         const addNew = async () => {
-    //             await setMessages(m => [...m, msg]);
-    //             return true;
-    //         }
-    //         addNew().then((res) => {
-    //             scrollToBottom();
-    //         });
-    // }
     function scrollToBottom() {
-        inp.current.scrollIntoView({ behavior: "smooth" });
+        document.querySelector('.div-to-show').scrollIntoView({ behavior: "smooth" });
     }
     function tog() {
         document.querySelector('.cameradiv').classList.toggle('swipe');
@@ -154,8 +141,9 @@ function Chat({ user, room }) {
             enctype:"multipart/form-data"
         },
         body: data
-        })
-        if (FileReader)
+        }).catch(err=>{console.log(err); })
+        if(input.files.length !== 0) {
+            if (FileReader)
 	    {
 		var reader = new FileReader();
 		reader.readAsDataURL(input.files[0]);
@@ -163,6 +151,7 @@ function Chat({ user, room }) {
 			setGrpSrc(e.target.result) ;
 		}
 	    }
+        }
         groupPicHide();
         
     }
@@ -195,18 +184,58 @@ function Chat({ user, room }) {
     },[location])
 
     function exitGroup(){
-        fetch(`http://localhost:5000/exitgroup?user=${user}&&room=${room}`);
+        fetch(`http://localhost:5000/exitgroup?user=${user}&&room=${room}`).catch(err => {console.log(err);});
         history.goBack();
         console.log(history)
         document.querySelector('.chat-header-right-options').classList.toggle('hide');
     }
 
-    function scrl(){
-        document.querySelector('.micIcn').scrollIntoView();
+
+    function hideSendFilePreview(){
+            document.querySelector('#file1').value = ''
+            document.querySelector('.send-files').classList.add('hide');
+            document.querySelector('.preview-div').classList.add('hide');
     }
-    
+    function previewSendFiles(e){
+        document.querySelector('.send-files').classList.remove('hide');
+        document.querySelector('.preview-div').classList.remove('hide');
+        document.querySelector('.preview-div').innerHTML= '';
+        if(e.target.files[0].type.match('^image')){
+            if (FileReader)
+            {
+            var reader = new FileReader();
+            reader.readAsDataURL(e.target.files[0]);
+            reader.onload = function (e) {
+                var image = document.createElement('img');
+                image.style.cssText = 'width: 100%;height: 100%';
+                image.src = e.target.result;
+                document.querySelector('.preview-div').appendChild(image);
+            }
+            }
+        }else{
+            setFileName(e.target.files[0].name);
+            var div1 = document.createElement('div');
+            var div2 = document.createElement('div');
+            var span = document.createElement('span');
+            var image = document.createElement('img');
+            image.style.cssText = 'width: 100%;height: 100%';
+           
+            if(e.target.files[0].type.match('^video')){
+                image.src = 'https://image.freepik.com/free-vector/video-upload-concept-illustration_114360-6773.jpg'
+            }else image.src = 'https://image.freepik.com/free-vector/concept-image-upload-landing-page_23-2148319404.jpg'
+            div1.classList.add('file-prev');
+            div1.appendChild(image);
+            span.innerHTML = e.target.files[0].name;
+            div2.classList.add('info');
+            div2.appendChild(span);
+            document.querySelector('.preview-div').appendChild(div1);
+            document.querySelector('.preview-div').appendChild(div2);
+
+        }
+    }
     return (
         <>
+        
         <div className="groupPic-div"> 
             <IconButton sx={{color:"white"}} className ="groupPic-div-crossicon" onClick={groupPicHide}  >
                 <CloseIcon />
@@ -222,7 +251,9 @@ function Chat({ user, room }) {
 
             </div>
         </div>
+        
         <div className="chat">
+        
             <div className="cameradiv">
                 <IconButton onClick={tog} sx={{ backgroundColor: "black", color: "white", margin: "10px" }}>
                     <CloseIcon />
@@ -246,10 +277,13 @@ function Chat({ user, room }) {
                     <IconButton sx={{color:"white"}} onClick={openFileOption}>
                         <AttachFileIcon />
                     </IconButton>
-                    <IconButton sx={{color:"white"}} onClick={openChatOption}>
+                    {/* <IconButton sx={{color:"white"}} onClick={openChatOption}>
                         <MoreVertIcon  />
-                    </IconButton>
-                    <input type="file" multiple={true} id="file1" style={{ display: "none" }}></input>
+                    </IconButton> */}
+                    <Link to={`/chat?name=${user}&&room=${room}`} ><IconButton onClick={exitGroup} sx={{color:"white"}}>
+                        <ExitToAppIcon />
+                    </IconButton></Link>
+                    <input type="file"  id="file1" style={{ display: "none" }} onChange={previewSendFiles}></input>
                     </div>
                     <div className="chat-header-right-options">
                     <IconButton sx={{color:"white"}} onClick={tog} >
@@ -272,7 +306,23 @@ function Chat({ user, room }) {
             </div>
 
             <div onScroll={hidebutn} className="chat-message-container">
-                {chatAnim?<div className="chatLoad"><ClapSpinner /></div> : messages.map((data) => {
+
+            <div className="send-files hide">
+                    <div className="preview-div hide">
+                            
+                    </div>
+
+                    <div className="sendorcanc">
+                    <IconButton sx={{color:"black",backgroundColor:'white'}} onClick={hideSendFilePreview}>
+                        <CloseIcon />
+                    </IconButton>
+                    <IconButton sx={{color:"black",backgroundColor:'white'}} >
+                        <SendIcon />
+                    </IconButton>
+                    </div>
+
+            </div>
+                {chatAnim?<div className="chatLoad"><ClapSpinner /></div> :  messages.map((data) => {
                     if (data.roomId === room) {
                         return (
                             <p key={(data._id?data._id:Math.random())} className={`chat-message  ${data.user !== user ? '' : ' chat-message-send'}`} >
@@ -286,10 +336,11 @@ function Chat({ user, room }) {
                     }
 
                 })}
-                <div ref={inp}></div>
+                <div className="div-to-show"></div>
                 <i onClick={scrollToBottom} style={{ left: `${chatwidth}` }} className="float-button" >
                     <IconButton> <KeyboardArrowDownIcon sx={{ color: "white", width: "20px", height: "20px" }} /></IconButton>
                 </i>
+                
             </div>
             <div className="emoji-show-div d-flex justify-content-center">
             {showPicker && <Picker
