@@ -9,21 +9,8 @@ const cors = require('cors');
 const bp = require('body-parser');
 const mongoose = require('mongoose');
 require('dotenv').config()
-const path = require('path');
-const fs = require('fs');
 
-//multer
 
-var multer = require('multer')
-
-var storage = multer.diskStorage({
-    destination: './uploads/',
-    filename: function (request, file, callback) {
-        callback(null, 'images.png')
-    }
-});
-
-var upload = multer({ storage: storage });
 
 //database
 const url = `mongodb+srv://${process.env.ID}:${process.env.PASS}@cluster0.tnd4e.mongodb.net/${process.env.DB}?retryWrites=true&w=majority`;
@@ -59,8 +46,8 @@ app.get('/messages/sync', (req, res) => {
     })
 })
 
-app.get("/groupPics", (req, res) => {
-    groupPic.find({}, (err, data) => {
+app.get("/groupPics/:id", (req, res) => {
+    groupPic.find({roomId: req.params.id}, (err, data) => {
         if (err) {
             console.log(err.message);
             res.status(500).send("an error occurred")
@@ -82,29 +69,35 @@ app.get('/messages/delete', (req, res) => {
     })
 })
 
-app.post('/groupPicUpload/:id', upload.single('image'), function (req, res) {
+app.post('/groupPicUpload/:id', function (req, res) {
     var newImg = {
-        roomId: req.body.room,
-        img: {
-            data: fs.readFileSync(path.join(__dirname + '/uploads/images.png')),
-            contentType: 'image/png'
-        }
+        roomId: req.body.roomId,
+        userChanged:req.body.userChanged,
+        img: req.body.img
     }
-    groupPic.deleteMany({ roomId: req.params.id }, (err, data) => {
-        if (err) console.log(err.message);
+    console.log(req.body)
+    groupPic.findOneAndUpdate({ roomId: req.params.id},{userChanged:req.body.userChanged,img: req.body.img},(err, data)=>{
+        if (err) {
+            console.log(err);
+        }
         else {
-            groupPic.create(newImg, (err, data) => {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-                    console.log("image saved");
-                }
-            })
+            if(data === null) {
+                groupPic.create(newImg, (err, data)=>{
+                    if(err) {res.status(500).send(err.message);
+                    console.log(err.message)}
+                    else{
+                        res.status(200).end()
+                        console.log("image created");
+                    }
+                })
+            }else{
+                console.log("image saved");
+                res.status(200).end()
+            }
         }
     })
 
-    res.status(204).end()
+   
 });
 
 
@@ -195,6 +188,7 @@ io.on('connection', (socket) => {
     })
     socket.on("new-msg", (msg) => {
         socket.to(roomid).emit('new-msg', msg);
+        console.log(msg);
         Message.create(msg, (err, data) => {
             if (err) {
                 console.log(err.message);

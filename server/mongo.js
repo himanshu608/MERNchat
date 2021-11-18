@@ -2,16 +2,24 @@ const mongoose = require('mongoose');
 
 
 const Message = mongoose.Schema({
+    
     roomId:String,
     user: String,
     message: String,
     time:String,
+    isImage:Boolean,
+    imageData:{
+        imageName:String,
+        data:String,
+        imageType:String,
+    }
 });
 
 const groupPic = mongoose.Schema({
     roomId:String,
+    userChanged:String,
     img : {
-        data: Buffer,
+        data: String,
         contentType: String
     }
 })

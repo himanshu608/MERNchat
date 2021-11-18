@@ -17,18 +17,23 @@ import SendIcon from '@mui/icons-material/Send';
 import { io } from "socket.io-client";
 const socket = io("http://localhost:5000", { transports: ['websocket', 'polling', 'flashsocket'] })
 
-function Chat({ user, room }) {
+function Chat({ user, room ,changeContacts }) {
     const [roomName, setRoomName] = useState("");
     const [newMsg, setNewMsg] = useState("");
     const [messages, setMessages] = useState([]);
     const [chatwidth, setChatwidth] = useState();
     const [grpSrc , setGrpSrc] = useState();
+    const [grpImgType,setGrpImgType] = useState();
     const [showPicker, setShowPicker] = useState(false);
     const [tempMsg, setTempMsg] = useState("");
     const history = useHistory();
     const location = useLocation();
     const [chatAnim,setChatAnim] = useState(true);
-    const [fileName,setFileName] = useState("hii");
+    const [isImage,setIsImage] = useState(false);
+    const [imageName,setImageName]= useState();
+    const [imgData,setImgData]= useState();
+    const [mimeType,setMimetype] =useState("");
+    
 
 
     const onEmojiClick = (event, emojiObject) => {
@@ -62,10 +67,26 @@ function Chat({ user, room }) {
 
     useEffect(() => {
         socket.on("new-msg", (msg) => {
-            msg.recived = true;
             setMessages(m => [...m, msg]);
         })
     }, [])
+
+    useEffect(() => {
+
+        fetch(`http://localhost:5000/groupPics/${room}`).then(res => {
+             return res.text();
+         }).then(data => {
+             data = JSON.parse(data)
+
+             data.map(i=>{
+                 if(i.roomId === room){
+                    setGrpSrc(i.img.data)
+                 }
+             })
+             
+         })
+         .catch(err => {console.log(err);});
+    },[location])
 
     function getTime() {
         var hours = new Date().getHours();
@@ -92,6 +113,12 @@ function Chat({ user, room }) {
                 user: user,
                 message: newMsg,
                 time: strTime,
+                isImage:false,
+                imageData:{
+                    imageName:"",
+                    data:"",
+                    imageType:""
+                }
             }
             socket.emit("new-msg", msg);
             const addNew = async () => {
@@ -104,6 +131,7 @@ function Chat({ user, room }) {
             });
         }
     }
+
     function scrollToBottom() {
         document.querySelector('.div-to-show').scrollIntoView({ behavior: "smooth" });
     }
@@ -127,36 +155,35 @@ function Chat({ user, room }) {
         document.querySelector('.groupPic-div').classList.toggle('hide');
     }
     function changeGroupPic(e) {
-        e.preventDefault();
         var input = document.querySelector('#changeGrp')
-
-        var data = new FormData()
-        data.append('image', input.files[0])
-        data.append('user', user)
-        data.append('room', room)
-
-        fetch(`http://localhost:5000/groupPicUpload/${room}`, {
-        method: 'POST',
-        headers: {
-            enctype:"multipart/form-data"
-        },
-        body: data
-        }).catch(err=>{console.log(err); })
+        
+            e.preventDefault();
         if(input.files.length !== 0) {
-            if (FileReader)
-	    {
-		var reader = new FileReader();
-		reader.readAsDataURL(input.files[0]);
-		reader.onload = function (e) {
-			setGrpSrc(e.target.result) ;
-		}
-	    }
+            const data = {
+                roomId:room,
+                userChanged:user,
+                img : {
+                    data: grpSrc,
+                    contentType: grpImgType
+                }
+            }
+            fetch(`http://localhost:5000/groupPicUpload/${room}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify(data)
+            }).catch(err=>{console.log(err); })
         }
+
         groupPicHide();
+
         
     }
 
     function changeMe(input){
+        if(input.target.files[0].type.match('^image')){
+        setGrpImgType(input.target.files[0].type)
         if (FileReader)
 	    {
 		var reader = new FileReader();
@@ -166,28 +193,14 @@ function Chat({ user, room }) {
 		}
 	    }
     }
-    useEffect(() => {
-
-        fetch('http://localhost:5000/groupPics').then(res => {
-             return res.text();
-         }).then(data => {
-             data = JSON.parse(data)
-             data.map(i=>{
-                 if(i.roomId === room){
-                    const ig =`data:${i.img.contentType};base64,${Buffer.from(i.img.data).toString('base64')}`
-                    setGrpSrc(ig);
-                 }
-             })
-             
-         })
-         .catch(err => {console.log(err);});
-    },[location])
+    }
+    
 
     function exitGroup(){
         fetch(`http://localhost:5000/exitgroup?user=${user}&&room=${room}`).catch(err => {console.log(err);});
         history.goBack();
         console.log(history)
-        document.querySelector('.chat-header-right-options').classList.toggle('hide');
+        changeContacts();
     }
 
 
@@ -196,16 +209,23 @@ function Chat({ user, room }) {
             document.querySelector('.send-files').classList.add('hide');
             document.querySelector('.preview-div').classList.add('hide');
     }
+
     function previewSendFiles(e){
+        console.log('hello')
         document.querySelector('.send-files').classList.remove('hide');
         document.querySelector('.preview-div').classList.remove('hide');
+        console.log(e.target.files[0])
         document.querySelector('.preview-div').innerHTML= '';
         if(e.target.files[0].type.match('^image')){
+            setIsImage(true);
+            setImageName(e.target.files[0].name)
+            setMimetype(e.target.files[0].type)
             if (FileReader)
             {
             var reader = new FileReader();
             reader.readAsDataURL(e.target.files[0]);
             reader.onload = function (e) {
+                setImgData(e.target.result);
                 var image = document.createElement('img');
                 image.style.cssText = 'width: 100%;height: 100%';
                 image.src = e.target.result;
@@ -213,7 +233,7 @@ function Chat({ user, room }) {
             }
             }
         }else{
-            setFileName(e.target.files[0].name);
+            
             var div1 = document.createElement('div');
             var div2 = document.createElement('div');
             var span = document.createElement('span');
@@ -233,9 +253,55 @@ function Chat({ user, room }) {
 
         }
     }
+
+    function sendImage(){
+        setShowPicker(false)
+        setChatAnim(false)
+        if (isImage) {
+            setTempMsg("");
+            const strTime = getTime();
+            const msg = {
+                roomId: room,
+                user: user,
+                message: "",
+                time: strTime,
+                isImage:true,
+                imageData:{
+                    imageName:imageName,
+                    data:imgData,
+                    imageType:mimeType
+                }
+            }
+            socket.emit("new-msg", msg);
+            const addNew = async () => {
+                await setMessages(m => [...m, msg]);
+                return true;
+            }
+            setNewMsg("");
+            addNew().then((res) => {
+                scrollToBottom();
+            });
+        }
+        document.querySelector('#file1').value = ''
+        document.querySelector('.send-files').classList.add('hide');
+        document.querySelector('.preview-div').classList.add('hide');
+    }
+
     return (
         <>
-        
+        <div className="send-files hide">
+                    <div className="preview-div hide">
+                            
+                    </div>
+                    <div className="sendorcanc">
+                    <IconButton sx={{color:"white",backgroundColor:'crimson'}} onClick={hideSendFilePreview}>
+                        <CloseIcon />
+                    </IconButton>
+                    <IconButton sx={{color:"white",backgroundColor:'crimson'}} onClick={sendImage}>
+                        <SendIcon />
+                    </IconButton>
+                    </div>
+        </div>
         <div className="groupPic-div"> 
             <IconButton sx={{color:"white"}} className ="groupPic-div-crossicon" onClick={groupPicHide}  >
                 <CloseIcon />
@@ -285,6 +351,7 @@ function Chat({ user, room }) {
                     </IconButton></Link>
                     <input type="file"  id="file1" style={{ display: "none" }} onChange={previewSendFiles}></input>
                     </div>
+
                     <div className="chat-header-right-options">
                     <IconButton sx={{color:"white"}} onClick={tog} >
                         <CameraAltIcon />
@@ -306,31 +373,25 @@ function Chat({ user, room }) {
             </div>
 
             <div onScroll={hidebutn} className="chat-message-container">
-
-            <div className="send-files hide">
-                    <div className="preview-div hide">
-                            
-                    </div>
-
-                    <div className="sendorcanc">
-                    <IconButton sx={{color:"black",backgroundColor:'white'}} onClick={hideSendFilePreview}>
-                        <CloseIcon />
-                    </IconButton>
-                    <IconButton sx={{color:"black",backgroundColor:'white'}} >
-                        <SendIcon />
-                    </IconButton>
-                    </div>
-
-            </div>
                 {chatAnim?<div className="chatLoad"><ClapSpinner /></div> :  messages.map((data) => {
                     if (data.roomId === room) {
-                        return (
+                        if(!data.isImage){
+                            return (
                             <p key={(data._id?data._id:Math.random())} className={`chat-message  ${data.user !== user ? '' : ' chat-message-send'}`} >
                                 <span className="chat-message-username">{data.user}</span>
                                 {data.message}
                                 <span className="chat-message-timestamp">{data.time}</span>
                             </p>
                         )
+                        }else{
+                            return (
+                                <div className={`${data.user !== user ? 'image-div-recv' : 'image-div'}`} key={(data._id?data._id:Math.random())}>
+                                    <span>{data.user}</span>
+                                    <img src={data.imageData.data}></img>
+                                    <span>{data.time}</span>
+                                </div>
+                            )
+                        }
                     } else {
                         return <h1 key={Math.random()}></h1>
                     }
@@ -341,6 +402,8 @@ function Chat({ user, room }) {
                     <IconButton> <KeyboardArrowDownIcon sx={{ color: "white", width: "20px", height: "20px" }} /></IconButton>
                 </i>
                 
+
+
             </div>
             <div className="emoji-show-div d-flex justify-content-center">
             {showPicker && <Picker

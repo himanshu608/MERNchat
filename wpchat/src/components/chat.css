@@ -62,7 +62,7 @@
     max-width:28vw;
     min-width: 200px;
     margin-bottom: 50px;
-    background-color:black;
+    background-color:#142F43;
     font-weight: 450;
     color:white;
     border:1px solid black;
@@ -160,10 +160,11 @@
     flex-direction: column;
     position: absolute;
     float:right;
-    right:30px;
+    right:35px;
     background-color:#142F43;
     padding:15px;
     z-index: 5;
+    margin-top:10px;
     border-radius: 10px 0px 10px 10px;
     border-bottom: 1px solid white;
     border-top: 1px solid white;
@@ -179,14 +180,17 @@
 }
 .chat-header-right-responsive{
     display:none;
+    pointer-events:none;
 }
+
 @media screen and (max-width:635px) {
     .cht{
         display: none;
     }
     .chat-header-right-responsive{
         display: flex;
-    }
+        pointer-events:all;
+        }
 }
 
 .groupPic-div{
@@ -335,12 +339,16 @@
      position: relative;
      left:50%;
      top:50%;
+     display: flex;
+     flex-direction: row;
+     color:white;
+     justify-content: space-between;
  }
 
  .send-files{
      position:absolute;
-     width:60vw;
-     height:70vh;
+     width:100vw;
+     height:100vh;
      /* background-color:#142F43; */
      background:#142F43 url('https://images.pexels.com/photos/3473569/pexels-photo-3473569.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');
     background-repeat: repeat;
@@ -350,10 +358,11 @@
      display: flex;
      flex-direction: column;
      overflow: hidden;
-     margin:10px;
+     margin:0px;
      /* justify-content:center; */
      align-items:center;
      backdrop-filter: blur(10px);
+     
  }
 
  .preview-div{
@@ -362,14 +371,15 @@
      flex-direction: column;
      border:1px solid black;
      position: relative;
-     width:80%;
+     width:60%;
      height:80%;
      padding:10px;
      /* background-color:#FF5151; */
-     background:#FF5151 url('https://images.pexels.com/photos/3473569/pexels-photo-3473569.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');
+     background:#FF5151 ;
     background-repeat: repeat;
     background-size:200px 200px;
      border-radius: 20px;
+     z-index: 10;
  }
 
  .send-files.hide{
@@ -394,10 +404,8 @@
 
  @media screen and (max-width:700px) {
     .preview-div{
-        width:100%;
-    }
-    .send-files{
-        width:120vw;
+        width:90%;
+        height:80%
     }
  }
 
@@ -426,3 +434,82 @@
     font-size: 1.5rem;
     font-weight: 600;
  }
+
+ .image-div{
+    background:#142F43 url('https://images.pexels.com/photos/3473569/pexels-photo-3473569.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');
+     width:250px;
+     height:350px;
+     position: relative;
+     margin-left: auto;
+     /* right:10px; */
+     margin-bottom: 50px;
+     display: flex;
+     flex-direction: column;
+     margin-top:60px;
+     border-radius: 10px;
+ }
+
+ .image-div-recv{
+    background:#142F43 url('https://images.pexels.com/photos/3473569/pexels-photo-3473569.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');
+    width:250px;
+    height:350px;
+    position: relative;
+    margin-right: auto;
+    left:10px;
+    margin-bottom: 50px;
+    display: flex;
+     flex-direction: column;
+     margin-top:10px;
+     border-radius: 10px;
+ }
+
+ 
+
+.image-div >img{
+    position: relative;
+    min-width: 100%;
+    min-height: 80%;
+    width: 100%;
+    height:100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.image-div > span{
+    color:aliceblue;
+    text-align: end;
+    min-height: 5%;
+    margin-right:20px;
+    font-size:medium;
+    font-weight: bold;
+}
+
+.image-div >img + span{
+    font-size:small;
+    color:aliceblue;
+}
+
+.image-div-recv >img{
+    position: relative;
+    min-width: 100%;
+    min-height: 80%;
+    width: 100%;
+    height:100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.image-div-recv > span{
+    color:aliceblue;
+    text-align: start;
+    min-height: 5%;
+    font-size:medium;
+    font-weight: bold;
+}
+
+.image-div-recv >img + span{
+    text-align: end;
+    font-size:small;
+    color:aliceblue;
+    font-weight: unset;
+}
