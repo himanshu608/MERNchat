@@ -35,8 +35,8 @@
     flex-direction: row;
     align-items:center;
 }
-.sidebar-header-left > h1{
-    margin-left: 10px;
+.sidebar-header-left  h3{
+    margin-left: 25px;
 }
 .sidebar-search{
     margin-top:5px;

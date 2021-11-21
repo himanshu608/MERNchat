@@ -47,7 +47,7 @@ app.get('/messages/sync', (req, res) => {
 })
 
 app.get("/groupPics/:id", (req, res) => {
-    groupPic.find({roomId: req.params.id}, (err, data) => {
+    groupPic.find({ roomId: req.params.id }, (err, data) => {
         if (err) {
             console.log(err.message);
             res.status(500).send("an error occurred")
@@ -70,77 +70,86 @@ app.get('/messages/delete', (req, res) => {
 })
 
 app.post('/groupPicUpload/:id', function (req, res) {
+    console.log(req.body)
     var newImg = {
         roomId: req.body.roomId,
-        userChanged:req.body.userChanged,
+        userChanged: req.body.userChanged,
         img: req.body.img
     }
-    console.log(req.body)
-    groupPic.findOneAndUpdate({ roomId: req.params.id},{userChanged:req.body.userChanged,img: req.body.img},(err, data)=>{
+    groupPic.findOneAndUpdate({ roomId: req.params.id }, { userChanged: req.body.userChanged, img: req.body.img }, (err, data) => {
         if (err) {
             console.log(err);
         }
         else {
-            if(data === null) {
-                groupPic.create(newImg, (err, data)=>{
-                    if(err) {res.status(500).send(err.message);
-                    console.log(err.message)}
-                    else{
+            if (data === null) {
+                groupPic.create(newImg, (err, data) => {
+                    if (err) {
+                        res.status(500).send(err.message);
+                        console.log(err.message)
+                    }
+                    else {
                         res.status(200).end()
                         console.log("image created");
                     }
                 })
-            }else{
+            } else {
                 console.log("image saved");
                 res.status(200).end()
             }
         }
     })
 
-   
+
 });
 
 
-app.get("/roomidperuser/:id",(req, res)=>{
-    roomIdPerUser.find({username: req.params.id}, (err, data)=>{
+app.get("/roomidperuser/:id", (req, res) => {
+    roomIdPerUser.find({ email: req.params.id }, (err, data) => {
         if (err) res.status(500).send(err.message);
-        else{
+        else {
             res.status(200).send(data);
         }
     })
 })
 
 
-app.get('/exitgroup',(req, res)=>{
-    
-    roomIdPerUser.find({ username: req.query.user }, (err, data) => {
+app.get('/exitgroup', (req, res) => {
+
+    roomIdPerUser.find({ email: req.query.user }, (err, data) => {
         if (err) res.status(500).send(err.message);
         else {
             if (data.length == 0) {
                 console.log("user not found")
                 res.send("user not found");
             } else {
-                    const i = data[0].rooms.indexOf(req.query.room);
-                    if(i>-1) data[0].rooms.splice(i,1);
-                    roomIdPerUser.findOneAndUpdate({ username: req.query.user }, { rooms: [...data[0].rooms] }, { new: true }, (err, data) => {
-                        if (err) res.status(500).send(err.message);
-                        else {
-                            // console.log(data);
-                            res.send(data);
-                        }
-                    })
+                const i = data[0].rooms.indexOf(req.query.room);
+                if (i > -1) data[0].rooms.splice(i, 1);
+                roomIdPerUser.findOneAndUpdate({ email: req.query.user }, { rooms: [...data[0].rooms] }, { new: true }, (err, data) => {
+                    if (err) res.status(500).send(err.message);
+                    else {
+                        // console.log(data);
+                        res.send(data);
+                    }
+                })
             }
         }
     })
 })
 
-app.post("/roomidadd", (req, res) => {
+app.get('/isUserPresent/:id', (req, res) => {
+    roomIdPerUser.find({ email: req.params.id }, (err, data) => {
+        if (err) res.status(500).send(err.message);
+        else res.status(200).send(data);
+    })
+})
 
+app.post("/roomidadd", (req, res) => {
     const roomsids = {
+        email: req.body.email,
         username: req.body.username,
         rooms: req.body.rooms,
     }
-    roomIdPerUser.find({ username: req.body.username }, (err, data) => {
+    roomIdPerUser.find({ email: req.body.email }, (err, data) => {
         if (err) res.status(500).send(err.message);
         else {
             if (data.length == 0) {
@@ -148,21 +157,21 @@ app.post("/roomidadd", (req, res) => {
                     if (err) res.status(500).send(err.message);
                     else {
                         // console.log("new room created");
-                        res.send(data);
+                        res.status(200).send(data);
                     }
                 })
             } else {
                 var ispres = false;
 
-                data[0].rooms.map(rm =>{
-                    if(rm == req.body.rooms) ispres = true;
+                data[0].rooms.map(rm => {
+                    if (rm == req.body.rooms) ispres = true;
                 })
-                if(!ispres){
-                    roomIdPerUser.findOneAndUpdate({ username: req.body.username }, { rooms: [...data[0].rooms,req.body.rooms] }, { new: true }, (err, data) => {
+                if (!ispres) {
+                    roomIdPerUser.findOneAndUpdate({ email: req.body.email }, { rooms: [...data[0].rooms, req.body.rooms] }, { new: true }, (err, data) => {
                         if (err) res.status(500).send(err.message);
                         else {
                             // console.log("new room added");
-                            res.send(data);
+                            res.status(200).send(data);
                         }
                     })
                 }
@@ -188,7 +197,6 @@ io.on('connection', (socket) => {
     })
     socket.on("new-msg", (msg) => {
         socket.to(roomid).emit('new-msg', msg);
-        console.log(msg);
         Message.create(msg, (err, data) => {
             if (err) {
                 console.log(err.message);

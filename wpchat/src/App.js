@@ -1,32 +1,40 @@
 // https://overreacted.io/
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Chat from './components/Chat';
-import Sidebar from './components/Sidebar';
-// import Join from './components/Join';
-import queryString from 'query-string';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
+import {auth} from './Firebase'
+import {onAuthStateChanged} from 'firebase/auth'
+import MainChat from './MainChat';
+import Login from './components/Login';
+import {useEffect,useState} from 'react'
+import AuthContext from './contexts/AuthContext'
+import Join from './components/Join'
+function App() {
+  const [currentUser,setCurrentUser] = useState({});
+
+    useEffect(() => {
+        onAuthStateChanged(auth,(res)=>{ //change current user state every time there is a change in auth state
+            setCurrentUser(res);
+        })
+    },[])
 
 
-
-function App({ location }) {
-
-
-  const a = queryString.parse(location.search);
-
-  function scrll(){
-    document.querySelector('.App').scrollBy({
-      top: 0,
-      left: 620,
-      behavior: 'smooth'
-    });
-  }
   return (
-    <div className="App">
-      <div className="appbody">
-        <Sidebar name={a.name} room={a.room} scroll={scrll} />
-        <Chat user={a.name} room={a.room} />
-      </div>
-    </div>
+    <AuthContext.Provider value={{currentUser:currentUser}}>
+    <Router>
+      <Switch>
+        <Route exact path="/" component={Login} />
+        <Route  path="/chat" component={MainChat} />
+        {currentUser?<Route exact path='/join' component={Join} />:<Redirect to='/' />}
+      </Switch>
+    </Router>
+    </AuthContext.Provider>
+
   );
 }
 

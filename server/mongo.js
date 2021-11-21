@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 
 const Message = mongoose.Schema({
-    
+    email:String,
     roomId:String,
     user: String,
     message: String,
@@ -25,6 +25,7 @@ const groupPic = mongoose.Schema({
 })
 
 const roomIdPerUser = mongoose.Schema({
+    email:String,
     username:String,
     rooms:[String],
 })

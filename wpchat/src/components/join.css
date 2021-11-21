@@ -14,7 +14,7 @@
 
 .join-body{
     width:400px;
-    height:70vh;
+    /* height:75vh; */
     background-color:beige;
     border-radius: 10px;
     box-shadow: 0 0 50px 10px rgb(0, 0, 0);
@@ -30,6 +30,8 @@
     flex: 1;
     position: relative;
     top:10%;
+    margin-bottom: 30px;
+    margin-top: 30px;
 }
 .join-form{
     display: flex;
@@ -55,7 +57,7 @@
     font-size: 1.2rem;
     font-family: sans-serif;
 }
-.join-form button{
+/* .join-form button{
     position: relative;
     height:50px;
     width:100%;
@@ -64,13 +66,13 @@
     font-size:1.2rem;
     color:whitesmoke;
     cursor: pointer;
-}
+} */
 
 @media screen and (max-width:430px) {
 
     .join-body{
         width:100vw;
-        height:70vh;
+        /* height:7vh; */
     }
     
 }
@@ -79,26 +81,20 @@
     position: absolute;
     width: 100vw;
     height: 100vh;
-    display: none;
-    backdrop-filter:none;
-    top:100vh;
+    display: grid;
+    top:0vh;
     z-index: 10;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(30px);
 }
 
 .load{
-    display: none;
-    
+    display: flex;
+    flex-direction: column;
 }
 
 .loading-div.hide{
-    backdrop-filter:blur(30px);
-    
-    display: block;
-    top:0px;
-}
-
-.load.hide{
-    position: relative;
-    left:50vw;
-    display: block;
+    display: none;
+    top:-100vh;
 }

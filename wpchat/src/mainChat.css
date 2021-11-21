@@ -1,0 +1,34 @@
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+  .App{
+    display:grid;
+    place-items: center;
+    height:100vh;
+    background-color:#142F43;
+    
+  }
+  .appbody{
+    width:95vw;
+    height:96vh;
+    margin-top:10px;
+    display:flex;
+    flex:1;
+    border-radius: 38px;
+    background-color:#142F43;
+    border:1px solid black;
+    background: linear-gradient(315deg, #ffffff, #e6e6e6);
+    /* box-shadow:  -7px -7px 42px #666666,
+               7px 7px 42px #ffffff; */
+  }
+  
+  @media screen and (max-width: 600px) {
+    .App{
+      overflow:scroll;
+    }
+    .appbody{
+      width:620px;
+    }
+  }

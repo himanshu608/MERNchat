@@ -1,18 +1,25 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import {getAuth} from "firebase/auth";
 
-// Your web app's Firebase configuration
+import { initializeApp } from "firebase/app";
+import { getAuth  ,signInWithPopup } from 'firebase/auth';
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCNGVMXUGgenrtrsnbks8uiJKCK1bx5F4I",
+  apiKey: `AIzaSyCNGVMXUGgenrtrsnbks8uiJKCK1bx5F4I`,
   authDomain: "authentication-mernchat.firebaseapp.com",
   projectId: "authentication-mernchat",
   storageBucket: "authentication-mernchat.appspot.com",
   messagingSenderId: "284361481961",
-  appId: "1:284361481961:web:ef58f1ad3b51d3b6f1da78"
+  appId: "1:284361481961:web:dcf0e77d2c6214d3f1da78"
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig)
 
-export const auth  = getAuth(app);
+//get firebase authentication information
+export const auth = getAuth(app)
+
+
+//function for social media login or signup
+export const gAuth = (authprovider)=>{
+  signInWithPopup(auth,authprovider)
+  .catch(err=>{console.error(err)})
+}
