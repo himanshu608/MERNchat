@@ -136,14 +136,19 @@
     transition: opacity  1s;
 }
 .cameradiv{
+    display: flex;
+    flex-direction: column;
     position:absolute ;
     height:98vh;
     width:100vw;
     background-color: #142F43;
-    z-index: 5;
-    left:-100vw;
+    z-index: 20;
+    left:-200vw;
     transition: left .5s;
+    align-items:center;
 }
+
+
 
 .swipe{
     left:0vw;
@@ -537,4 +542,12 @@
     top:30vh;
     left: 10px;
     right: 10px;
+}
+
+@media screen and (max-width:768px) {
+    .cameradiv img{
+        width:100%;
+        height:100%;
+        
+    }
 }

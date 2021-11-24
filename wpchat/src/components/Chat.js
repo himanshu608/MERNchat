@@ -10,21 +10,25 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CloseIcon from '@mui/icons-material/Close';
 import Picker from 'emoji-picker-react';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import { Link, useHistory, useLocation,Redirect } from "react-router-dom";
+import { Link, useHistory, useLocation, Redirect } from "react-router-dom";
 import { ClapSpinner } from "react-spinners-kit";
 import SendIcon from '@mui/icons-material/Send';
 import HomeIcon from '@mui/icons-material/Home';
 import AuthContext from '../contexts/AuthContext'
+import Camera from 'react-html5-camera-photo';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import 'react-html5-camera-photo/build/css/index.css';
+
 import { io } from "socket.io-client";
 const socket = io("http://localhost:5000", { transports: ['websocket', 'polling', 'flashsocket'] })
 
 
 
 function Chat({ user, room }) {
-    
+
     const history = useHistory();
     const location = useLocation();
-    if(location.search==='') {
+    if (location.search === '') {
         history.push('/join')
     }
     const [roomName, setRoomName] = useState("");
@@ -35,8 +39,8 @@ function Chat({ user, room }) {
     const [grpImgType, setGrpImgType] = useState();
     const [showPicker, setShowPicker] = useState(false);
     const [tempMsg, setTempMsg] = useState("");
-    
-    
+    const [cameraImgSrc, setCameraImgSrc] = useState(null);
+    const [isCameraOff,setIsCameraOff] = useState(true);
     const [chatAnim, setChatAnim] = useState(true);
     const [isImage, setIsImage] = useState(false);
     const [imageName, setImageName] = useState();
@@ -59,30 +63,30 @@ function Chat({ user, room }) {
         }
     }, [])
 
-    function dosomee(){
+    function dosomee() {
         window.location.href = "http://localhost:3000/join"
     }
 
     useEffect(() => {
-        if(currentUser){
+        if (currentUser) {
             fetch(`http://localhost:5000/roomidperuser/${currentUser.email}`).then(res => { //get room ids for current user
-            return res.text();
-        }).then(data => {
-            data = JSON.parse(data)
-            if(data.length===0){
-                console.log("new user")
-            }else{
-                // if(data[0].rooms.length === 0){
-                //     document.querySelector('.zero-rooms-div').classList.add('hide');
-                //     // setTimeout(()=>{
-                //     //     document.querySelector('.exitbtnn').click();
-                //     // },2500)
-                // }
-                setJoinedRooms(data[0].rooms);
-            }
-        }).catch(err=>console.log(err.message));
+                return res.text();
+            }).then(data => {
+                data = JSON.parse(data)
+                if (data.length === 0) {
+                    console.log("new user")
+                } else {
+                    // if(data[0].rooms.length === 0){
+                    //     document.querySelector('.zero-rooms-div').classList.add('hide');
+                    //     // setTimeout(()=>{
+                    //     //     document.querySelector('.exitbtnn').click();
+                    //     // },2500)
+                    // }
+                    setJoinedRooms(data[0].rooms);
+                }
+            }).catch(err => console.log(err.message));
         }
-    },[currentUser])
+    }, [currentUser])
 
 
 
@@ -152,7 +156,7 @@ function Chat({ user, room }) {
             setTempMsg("");
             const strTime = getTime();
             const msg = {
-                email:currentUser.email,
+                email: currentUser.email,
                 roomId: room,
                 user: user,
                 message: newMsg,
@@ -181,6 +185,7 @@ function Chat({ user, room }) {
     }
     function tog() {
         document.querySelector('.cameradiv').classList.toggle('swipe');
+        setIsCameraOff(pre=>!pre);
     }
     function openFileOption() {
         document.getElementById("file1").click();
@@ -241,17 +246,17 @@ function Chat({ user, room }) {
 
     function exitGroup() {
         fetch(`http://localhost:5000/exitgroup?user=${currentUser.email}&&room=${room}`)
-        .then(response => {return response.text()})
-        .then(response => {
-            response = JSON.parse(response)
-            if(response.rooms.length === 0) {
-                document.querySelector('.zero-rooms-div').classList.add('hide');
-                    setTimeout(()=>{
+            .then(response => { return response.text() })
+            .then(response => {
+                response = JSON.parse(response)
+                if (response.rooms.length === 0) {
+                    document.querySelector('.zero-rooms-div').classList.add('hide');
+                    setTimeout(() => {
                         document.querySelector('.exitbtnn').click();
-                    },2500)
-            }else  history.push(`/chat?room=${response.rooms[0]}&&name=${user}`)
-        })
-        .catch(err => { console.log(err); });
+                    }, 2500)
+                } else history.push(`/chat?room=${response.rooms[0]}&&name=${user}`)
+            })
+            .catch(err => { console.log(err); });
     }
 
 
@@ -311,7 +316,7 @@ function Chat({ user, room }) {
             setTempMsg("");
             const strTime = getTime();
             const msg = {
-                emai:currentUser.email ,
+                emai: currentUser.email,
                 roomId: room,
                 user: user,
                 message: "",
@@ -338,17 +343,63 @@ function Chat({ user, room }) {
         document.querySelector('.preview-div').classList.add('hide');
     }
 
+    function handleTakePhoto(dataUri) {
+        setCameraImgSrc(dataUri);
+        setIsCameraOff(true)
+    }
+
+    function retakePhoto() {
+        setCameraImgSrc(null);
+        setIsCameraOff(false)
+    }
+    function sendClicked(){
+        if(cameraImgSrc){
+            tog();
+            setShowPicker(false)
+            setChatAnim(false)
+            setIsCameraOff(true);
+            setTempMsg("");
+            const strTime = getTime();
+            const msg = {
+                emai: currentUser.email,
+                roomId: room,
+                user: user,
+                message: "",
+                time: strTime,
+                isImage: true,
+                imageData: {
+                    imageName: 'clickedimage.jpg',
+                    data: cameraImgSrc,
+                    imageType: 'image/png'
+                }
+            }
+            socket.emit("new-msg", msg);
+            const addNew = async () => {
+                await setMessages(m => [...m, msg]);
+                return true;
+            }
+            setNewMsg("");
+            addNew().then((res) => {
+                scrollToBottom();
+            });
+
+        }
+    }
+    function handleCameraError() {
+        tog();
+        alert('unable to start camera')
+    }
     return (
         <>
             <div className="zero-rooms-div">
-            <div className="container-fluid bg-bg-primary d-grid justify-content-center  my-auto zero-rooms-div-info">
+                <div className="container-fluid bg-bg-primary d-grid justify-content-center  my-auto zero-rooms-div-info">
                     <h1 className="text-white">Please Join a room to Enter ...</h1>
-                    <IconButton sx={{ color: "white",top:"10vh" }}>
+                    <IconButton sx={{ color: "white", top: "10vh" }}>
                         <a href="/"><HomeIcon /></a>
                     </IconButton>
                     <button className="exitbtnn" onClick={dosomee}></button>
+                </div>
             </div>
-        </div>
             <div className="send-files hide">
                 <div className="preview-div hide">
 
@@ -381,9 +432,26 @@ function Chat({ user, room }) {
             <div className="chat">
 
                 <div className="cameradiv">
-                    <IconButton onClick={tog} sx={{ backgroundColor: "black", color: "white", margin: "10px" }}>
+                    <IconButton onClick={tog} sx={{ backgroundColor: "black", color: "white", margin: "10px", width: '40px' }}>
                         <CloseIcon />
                     </IconButton>
+                    {
+                        isCameraOff ?
+                            <div className="container d-flex flex-column text-center justify-content-center align-items-center">
+                                <img src={cameraImgSrc}></img>
+                                <div className="send-or-retake d-flex flex-row w-50 justify-content-around mt-3">
+                                    <IconButton onClick={retakePhoto} sx={{ color: "white", width: '40px', backgroundColor: 'black' }}>
+                                        <AutorenewIcon />
+                                    </IconButton>
+                                    <IconButton onClick={sendClicked} sx={{ color: "white", width: '40px', backgroundColor: 'black' }}>
+                                        <SendIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+                            :
+                            <Camera  onCameraError = { (error) => { handleCameraError(error); } } onTakePhotoAnimationDone={(dataUri) => { handleTakePhoto(dataUri); }}
+                            />
+                    }
                 </div>
                 <div className="chat-header">
                     <div className="chat-header-left">
@@ -433,7 +501,7 @@ function Chat({ user, room }) {
                 </div>
 
                 <div onScroll={hidebutn} className="chat-message-container">
-                    
+
                     {chatAnim ? <div className="chatLoad"><ClapSpinner /></div> : messages.map((data) => {
                         if (data.roomId === room) {
                             if (!data.isImage) {
