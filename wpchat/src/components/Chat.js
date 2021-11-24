@@ -76,12 +76,6 @@ function Chat({ user, room }) {
                 if (data.length === 0) {
                     console.log("new user")
                 } else {
-                    // if(data[0].rooms.length === 0){
-                    //     document.querySelector('.zero-rooms-div').classList.add('hide');
-                    //     // setTimeout(()=>{
-                    //     //     document.querySelector('.exitbtnn').click();
-                    //     // },2500)
-                    // }
                     setJoinedRooms(data[0].rooms);
                 }
             }).catch(err => console.log(err.message));
@@ -354,7 +348,7 @@ function Chat({ user, room }) {
     }
     function sendClicked(){
         if(cameraImgSrc){
-            tog();
+            document.querySelector('.cameradiv').classList.toggle('swipe');
             setShowPicker(false)
             setChatAnim(false)
             setIsCameraOff(true);

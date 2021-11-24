@@ -139,13 +139,15 @@
     display: flex;
     flex-direction: column;
     position:absolute ;
-    height:98vh;
+    height:95vh;
     width:100vw;
-    background-color: #142F43;
+    /* background-color: #142F43; */
+    backdrop-filter: blur(20px) ;
     z-index: 20;
     left:-200vw;
     transition: left .5s;
     align-items:center;
+    overflow: hidden;
 }
 
 
