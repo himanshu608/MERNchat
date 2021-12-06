@@ -25,7 +25,7 @@
 
 ![ezgif com-gif-maker](https://user-images.githubusercontent.com/61231732/141796368-9538ad88-22ab-4725-be66-1bde8f8c150b.gif)
 
-![Screenshot 2021-11-15 193058](https://user-images.githubusercontent.com/61231732/141795691-ac0fa1ec-52f8-4760-8716-3d5568a2c534.png)
+![Screenshot 2021-12-06 185755](https://user-images.githubusercontent.com/61231732/144854441-ab6779f8-b78b-4adf-a4ef-e7e012fc527f.png)
 
 
 # Features ( Coming Soon....)
