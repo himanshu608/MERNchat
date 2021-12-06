@@ -6,18 +6,21 @@
   - Can leave a particular room
   - Chat rooms are persistent.
   - Can change group images accordingly.
+  - Can capture image then send to group.
+  - Can send Emojis.
+  - Can select image from device and send.
 
 # used frameworks and programming languages
-  - HTML5 CSS3 
-  - React.js
+  -  HTML5 CSS3 
+  -  React.js
   -  Express.js 
   -  Node.js
-  -   MongoDb 
-  -   mongoose 
-  -   Javascript 
-  -   ES6 
-  -   Bootstrap
-  -   MUI
+  -  MongoDb 
+  -  mongoose 
+  -  Javascript 
+  -  ES6 
+  -  Bootstrap
+  -  MUI
 # Previews
 
 ![Screenshot 2021-11-15 193002](https://user-images.githubusercontent.com/61231732/141795510-099f6824-cbc6-441a-9468-cb74b54b1e43.png)
@@ -33,6 +36,5 @@
   - Record and send voice messages.
   - Audio and Video calling.
   - Send docs/files/stickers/Gifs etc.
-  - Capture image or video then send.
   - Room Gaming.
   - End to end Encryption.
